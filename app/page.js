@@ -62,9 +62,29 @@ export default function Home() {
               <li><a href="#contact" className="navbar__link" data-section="contact">Contact</a></li>
             </ul>
             
-            <button className="navbar__cta" aria-label="Demander une démo">
-              <i className="fas fa-calendar-alt"></i> Demander une démo
-            </button>
+            <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+              {/* Theme Toggle */}
+              <div className="theme-toggle" id="themeToggle">
+                <button className="theme-toggle__button" id="themeButton" aria-label="Changer le thème" title="Thème">
+                  <i className="fas fa-sun" id="themeIcon"></i>
+                </button>
+                <div className="theme-toggle__menu" id="themeMenu">
+                  <button className="theme-toggle__option" data-theme="light" aria-label="Mode clair">
+                    <i className="fas fa-sun"></i> <span>Clair</span>
+                  </button>
+                  <button className="theme-toggle__option" data-theme="dark" aria-label="Mode sombre">
+                    <i className="fas fa-moon"></i> <span>Sombre</span>
+                  </button>
+                  <button className="theme-toggle__option" data-theme="auto" aria-label="Automatique">
+                    <i className="fas fa-adjust"></i> <span>Auto</span>
+                  </button>
+                </div>
+              </div>
+              
+              <button className="navbar__cta" aria-label="Demander une démo">
+                <i className="fas fa-calendar-alt"></i> Demander une démo
+              </button>
+            </div>
             
             <button className="navbar__toggle" id="navbarToggle" aria-label="Menu mobile" aria-expanded="false">
               <span></span>
@@ -186,14 +206,14 @@ export default function Home() {
           <p className="section__subtitle">Innovation technologique, impact social et économie circulaire</p>
           
           <div style={{maxWidth: '900px', margin: '0 auto', marginTop: '64px'}}>
-            <div style={{background: 'var(--card)', backdropFilter: 'blur(20px)', padding: '48px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', marginBottom: '32px'}}>
-              <div style={{display: 'flex', alignItems: 'start', gap: '20px', marginBottom: '32px'}}>
-                <div style={{background: 'linear-gradient(135deg, var(--blue), var(--mint))', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
-                  <i className="fas fa-lightbulb" style={{fontSize: '28px', color: 'white'}}></i>
+            <div className="project-card">
+              <div className="project-card__header">
+                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, var(--blue), var(--mint))'}}>
+                  <i className="fas fa-lightbulb"></i>
                 </div>
                 <div>
-                  <h3 style={{fontSize: '1.5rem', fontWeight: '700', marginBottom: '12px', color: 'var(--text)'}}>Idée centrale</h3>
-                  <p style={{color: 'var(--muted)', lineHeight: '1.8', fontSize: '1.05rem'}}>
+                  <h3 className="project-card__title">Idée centrale</h3>
+                  <p className="project-card__text">
                     SmartCare est un dispositif médical intelligent conçu spécifiquement pour les enfants 
                     avec Trisomie 21. Ce n&apos;est pas simplement un gadget, mais un écosystème complet 
                     qui améliore la <strong>sécurité</strong>, l&apos;<strong>autonomie</strong> et la 
@@ -204,67 +224,67 @@ export default function Home() {
               </div>
             </div>
 
-            <div style={{background: 'var(--card)', backdropFilter: 'blur(20px)', padding: '48px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', marginBottom: '32px'}}>
-              <div style={{display: 'flex', alignItems: 'start', gap: '20px', marginBottom: '32px'}}>
-                <div style={{background: 'linear-gradient(135deg, #ef4444, #f59e0b)', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
-                  <i className="fas fa-exclamation-triangle" style={{fontSize: '28px', color: 'white'}}></i>
+            <div className="project-card">
+              <div className="project-card__header">
+                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, #ef4444, #f59e0b)'}}>
+                  <i className="fas fa-exclamation-triangle"></i>
                 </div>
                 <div>
-                  <h3 style={{fontSize: '1.5rem', fontWeight: '700', marginBottom: '12px', color: 'var(--text)'}}>Problème résolu</h3>
-                  <p style={{color: 'var(--muted)', lineHeight: '1.8', fontSize: '1.05rem', marginBottom: '20px'}}>
+                  <h3 className="project-card__title">Problème résolu</h3>
+                  <p className="project-card__text" style={{marginBottom: '20px'}}>
                     Les enfants avec Trisomie 21 font face à des défis quotidiens :
                   </p>
-                  <ul style={{listStyle: 'none', padding: 0, color: 'var(--muted)', lineHeight: '2'}}>
-                    <li><i className="fas fa-check-circle" style={{color: 'var(--mint)', marginRight: '12px'}}></i> Difficulté à exprimer le stress ou l&apos;inconfort</li>
-                    <li><i className="fas fa-check-circle" style={{color: 'var(--mint)', marginRight: '12px'}}></i> Risque de se perdre ou de se désorienter</li>
-                    <li><i className="fas fa-check-circle" style={{color: 'var(--mint)', marginRight: '12px'}}></i> Besoin de supervision constante</li>
-                    <li><i className="fas fa-check-circle" style={{color: 'var(--mint)', marginRight: '12px'}}></i> Épisodes d&apos;anxiété et comportements impulsifs</li>
-                    <li><i className="fas fa-check-circle" style={{color: 'var(--mint)', marginRight: '12px'}}></i> Communication fragmentée entre parents, éducateurs et médecins</li>
+                  <ul className="project-card__list">
+                    <li><i className="fas fa-check-circle"></i> Difficulté à exprimer le stress ou l&apos;inconfort</li>
+                    <li><i className="fas fa-check-circle"></i> Risque de se perdre ou de se désorienter</li>
+                    <li><i className="fas fa-check-circle"></i> Besoin de supervision constante</li>
+                    <li><i className="fas fa-check-circle"></i> Épisodes d&apos;anxiété et comportements impulsifs</li>
+                    <li><i className="fas fa-check-circle"></i> Communication fragmentée entre parents, éducateurs et médecins</li>
                   </ul>
-                  <p style={{color: 'var(--muted)', lineHeight: '1.8', fontSize: '1.05rem', marginTop: '20px', fontStyle: 'italic'}}>
+                  <p className="project-card__text" style={{marginTop: '20px', fontStyle: 'italic'}}>
                     Les solutions existantes sont des trackers de fitness génériques, non adaptés à leurs besoins spécifiques.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div style={{background: 'var(--card)', backdropFilter: 'blur(20px)', padding: '48px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', marginBottom: '32px'}}>
-              <div style={{display: 'flex', alignItems: 'start', gap: '20px'}}>
-                <div style={{background: 'linear-gradient(135deg, var(--mint), var(--blue))', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
-                  <i className="fas fa-cogs" style={{fontSize: '28px', color: 'white'}}></i>
+            <div className="project-card">
+              <div className="project-card__header">
+                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, var(--mint), var(--blue))'}}>
+                  <i className="fas fa-cogs"></i>
                 </div>
                 <div>
-                  <h3 style={{fontSize: '1.5rem', fontWeight: '700', marginBottom: '12px', color: 'var(--text)'}}>Notre solution : un écosystème complet</h3>
-                  <div style={{display: 'grid', gap: '24px', marginTop: '24px'}}>
-                    <div style={{padding: '20px', background: 'rgba(38, 166, 255, 0.05)', borderRadius: 'var(--radius)', border: '1px solid rgba(38, 166, 255, 0.2)'}}>
-                      <h4 style={{fontSize: '1.2rem', fontWeight: '600', marginBottom: '8px', color: 'var(--text)'}}>
-                        <i className="fas fa-bracelet" style={{color: 'var(--blue)', marginRight: '10px'}}></i>
+                  <h3 className="project-card__title">Notre solution : un écosystème complet</h3>
+                  <div className="project-solution-grid">
+                    <div className="project-solution-item">
+                      <h4 className="project-solution-item__title">
+                        <i className="fas fa-bracelet" style={{color: 'var(--blue)'}}></i>
                         Bracelet intelligent
                       </h4>
-                      <p style={{color: 'var(--muted)', lineHeight: '1.7'}}>
+                      <p className="project-solution-item__text">
                         Silicone médical adapté aux enfants, design arrondi et sécurisé. Capteurs de fréquence cardiaque, 
                         mouvement, indicateurs de stress, GPS, et retour audio/vibration pour apaiser l&apos;enfant. 
                         <strong> Design modulaire</strong> : cœur électronique détachable.
                       </p>
                     </div>
                     
-                    <div style={{padding: '20px', background: 'rgba(47, 230, 200, 0.05)', borderRadius: 'var(--radius)', border: '1px solid rgba(47, 230, 200, 0.2)'}}>
-                      <h4 style={{fontSize: '1.2rem', fontWeight: '600', marginBottom: '8px', color: 'var(--text)'}}>
-                        <i className="fas fa-mobile-alt" style={{color: 'var(--mint)', marginRight: '10px'}}></i>
+                    <div className="project-solution-item project-solution-item--mint">
+                      <h4 className="project-solution-item__title">
+                        <i className="fas fa-mobile-alt" style={{color: 'var(--mint)'}}></i>
                         Application mobile
                       </h4>
-                      <p style={{color: 'var(--muted)', lineHeight: '1.7'}}>
+                      <p className="project-solution-item__text">
                         Surveillance en temps réel, alertes et notifications, historique de santé et d&apos;activité, 
                         recommandations personnalisées. Accès sécurisé pour parents et éducateurs.
                       </p>
                     </div>
                     
-                    <div style={{padding: '20px', background: 'rgba(38, 166, 255, 0.05)', borderRadius: 'var(--radius)', border: '1px solid rgba(38, 166, 255, 0.2)'}}>
-                      <h4 style={{fontSize: '1.2rem', fontWeight: '600', marginBottom: '8px', color: 'var(--text)'}}>
-                        <i className="fas fa-cloud" style={{color: 'var(--blue)', marginRight: '10px'}}></i>
+                    <div className="project-solution-item">
+                      <h4 className="project-solution-item__title">
+                        <i className="fas fa-cloud" style={{color: 'var(--blue)'}}></i>
                         Plateforme cloud
                       </h4>
-                      <p style={{color: 'var(--muted)', lineHeight: '1.7'}}>
+                      <p className="project-solution-item__text">
                         Analyse de données, rapports détaillés, accès multi-rôles (famille / école / médical), 
                         détection assistée par IA des patterns comportementaux.
                       </p>
@@ -274,39 +294,39 @@ export default function Home() {
               </div>
             </div>
 
-            <div style={{background: 'var(--card)', backdropFilter: 'blur(20px)', padding: '48px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)'}}>
-              <div style={{display: 'flex', alignItems: 'start', gap: '20px'}}>
-                <div style={{background: 'linear-gradient(135deg, #10b981, #059669)', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
-                  <i className="fas fa-recycle" style={{fontSize: '28px', color: 'white'}}></i>
+            <div className="project-card">
+              <div className="project-card__header">
+                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, #10b981, #059669)'}}>
+                  <i className="fas fa-recycle"></i>
                 </div>
                 <div>
-                  <h3 style={{fontSize: '1.5rem', fontWeight: '700', marginBottom: '12px', color: 'var(--text)'}}>Économie circulaire intégrée</h3>
-                  <p style={{color: 'var(--muted)', lineHeight: '1.8', fontSize: '1.05rem', marginBottom: '24px'}}>
+                  <h3 className="project-card__title">Économie circulaire intégrée</h3>
+                  <p className="project-card__text" style={{marginBottom: '24px'}}>
                     SmartCare est conçu selon les principes de l&apos;économie circulaire, pas linéaire :
                   </p>
-                  <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px'}}>
-                    <div style={{textAlign: 'center', padding: '20px', background: 'rgba(38, 166, 255, 0.05)', borderRadius: 'var(--radius)'}}>
-                      <i className="fas fa-redo-alt" style={{fontSize: '32px', color: 'var(--blue)', marginBottom: '12px'}}></i>
-                      <h4 style={{fontSize: '1rem', fontWeight: '600', marginBottom: '8px'}}>Réutilisation</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.9rem'}}>Même module pour plusieurs utilisateurs</p>
+                  <div className="project-circular-grid">
+                    <div className="project-circular-item">
+                      <i className="fas fa-redo-alt"></i>
+                      <h4 className="project-circular-item__title">Réutilisation</h4>
+                      <p className="project-circular-item__text">Même module pour plusieurs utilisateurs</p>
                     </div>
-                    <div style={{textAlign: 'center', padding: '20px', background: 'rgba(47, 230, 200, 0.05)', borderRadius: 'var(--radius)'}}>
-                      <i className="fas fa-tools" style={{fontSize: '32px', color: 'var(--mint)', marginBottom: '12px'}}></i>
-                      <h4 style={{fontSize: '1rem', fontWeight: '600', marginBottom: '8px'}}>Réparation</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.9rem'}}>Remplacer une partie, pas tout</p>
+                    <div className="project-circular-item project-circular-item--mint">
+                      <i className="fas fa-tools"></i>
+                      <h4 className="project-circular-item__title">Réparation</h4>
+                      <p className="project-circular-item__text">Remplacer une partie, pas tout</p>
                     </div>
-                    <div style={{textAlign: 'center', padding: '20px', background: 'rgba(38, 166, 255, 0.05)', borderRadius: 'var(--radius)'}}>
-                      <i className="fas fa-sync-alt" style={{fontSize: '32px', color: 'var(--blue)', marginBottom: '12px'}}></i>
-                      <h4 style={{fontSize: '1rem', fontWeight: '600', marginBottom: '8px'}}>Reconditionnement</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.9rem'}}>Programme de reprise</p>
+                    <div className="project-circular-item">
+                      <i className="fas fa-sync-alt"></i>
+                      <h4 className="project-circular-item__title">Reconditionnement</h4>
+                      <p className="project-circular-item__text">Programme de reprise</p>
                     </div>
-                    <div style={{textAlign: 'center', padding: '20px', background: 'rgba(47, 230, 200, 0.05)', borderRadius: 'var(--radius)'}}>
-                      <i className="fas fa-recycle" style={{fontSize: '32px', color: 'var(--mint)', marginBottom: '12px'}}></i>
-                      <h4 style={{fontSize: '1rem', fontWeight: '600', marginBottom: '8px'}}>Recyclage</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.9rem'}}>Matériaux + électronique</p>
+                    <div className="project-circular-item project-circular-item--mint">
+                      <i className="fas fa-recycle"></i>
+                      <h4 className="project-circular-item__title">Recyclage</h4>
+                      <p className="project-circular-item__text">Matériaux + électronique</p>
                     </div>
                   </div>
-                  <p style={{color: 'var(--muted)', lineHeight: '1.8', fontSize: '1.05rem', marginTop: '24px', padding: '20px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: 'var(--radius)', border: '1px solid rgba(16, 185, 129, 0.2)'}}>
+                  <p className="project-highlight">
                     <strong>Résultat :</strong> Réduction directe des déchets électroniques (e-waste) et alignement 
                     avec les objectifs de durabilité et d&apos;économie circulaire de la Tunisie.
                   </p>

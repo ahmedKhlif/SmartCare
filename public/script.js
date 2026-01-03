@@ -805,10 +805,83 @@ if (heroTitle) {
 // INITIALIZE ALL FUNCTIONS
 // ============================================
 
+// Theme Management
+function initTheme() {
+    const themeButton = document.getElementById('themeButton');
+    const themeMenu = document.getElementById('themeMenu');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeOptions = document.querySelectorAll('.theme-toggle__option');
+    
+    if (!themeButton || !themeMenu || !themeIcon) return;
+    
+    // Get saved theme or default to 'auto'
+    let currentTheme = localStorage.getItem('theme') || 'auto';
+    
+    // Apply theme
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        currentTheme = theme;
+        
+        // Update icon
+        if (theme === 'dark') {
+            themeIcon.className = 'fas fa-moon';
+        } else if (theme === 'light') {
+            themeIcon.className = 'fas fa-sun';
+        } else {
+            themeIcon.className = 'fas fa-adjust';
+        }
+        
+        // Update active option
+        themeOptions.forEach(option => {
+            if (option.dataset.theme === theme) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    }
+    
+    // Apply saved theme
+    applyTheme(currentTheme);
+    
+    // Toggle menu
+    themeButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        themeMenu.classList.toggle('open');
+    });
+    
+    // Close menu when clicking outside
+    const themeToggle = document.getElementById('themeToggle');
+    document.addEventListener('click', (e) => {
+        if (themeToggle && !themeToggle.contains(e.target)) {
+            themeMenu.classList.remove('open');
+        }
+    });
+    
+    // Handle theme selection
+    themeOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const theme = option.dataset.theme;
+            applyTheme(theme);
+            themeMenu.classList.remove('open');
+        });
+    });
+    
+    // Listen for system theme changes (for auto mode)
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', (e) => {
+        if (currentTheme === 'auto') {
+            applyTheme('auto');
+        }
+    });
+}
+
 // Initialize when DOM is ready
 function initializeApp() {
     // Initialize all modules
     console.log('Initializing SmartCare app...');
+    initTheme();
     initNavbar();
     initVideo();
     init3DModel();

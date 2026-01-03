@@ -7,8 +7,23 @@ import Image from 'next/image'
 
 export default function DetailsPage() {
   useEffect(() => {
-    // Initialize 3D model scripts
+    // Load all client-side scripts after component mounts
     if (typeof window !== 'undefined') {
+      // Check if script is already loaded
+      if (!document.querySelector('script[src="/script.js"]')) {
+        // Wait a bit for DOM to be ready
+        setTimeout(() => {
+          const script = document.createElement('script');
+          script.src = '/script.js';
+          script.async = true;
+          script.onload = () => {
+            console.log('Scripts loaded successfully on details page');
+          };
+          document.body.appendChild(script);
+        }, 100);
+      }
+      
+      // Initialize 3D model scripts
       const hero3DModel = document.getElementById('hero3DModel');
       
       if (hero3DModel) {
@@ -110,9 +125,29 @@ export default function DetailsPage() {
               <li><Link href="/#contact" className="navbar__link">Contact</Link></li>
             </ul>
             
-            <Link href="/#contact" className="navbar__cta">
-              <i className="fas fa-calendar-alt"></i> Demander une démo
-            </Link>
+            <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+              {/* Theme Toggle */}
+              <div className="theme-toggle" id="themeToggle">
+                <button className="theme-toggle__button" id="themeButton" aria-label="Changer le thème" title="Thème">
+                  <i className="fas fa-sun" id="themeIcon"></i>
+                </button>
+                <div className="theme-toggle__menu" id="themeMenu">
+                  <button className="theme-toggle__option" data-theme="light" aria-label="Mode clair">
+                    <i className="fas fa-sun"></i> <span>Clair</span>
+                  </button>
+                  <button className="theme-toggle__option" data-theme="dark" aria-label="Mode sombre">
+                    <i className="fas fa-moon"></i> <span>Sombre</span>
+                  </button>
+                  <button className="theme-toggle__option" data-theme="auto" aria-label="Automatique">
+                    <i className="fas fa-adjust"></i> <span>Auto</span>
+                  </button>
+                </div>
+              </div>
+              
+              <Link href="/#contact" className="navbar__cta">
+                <i className="fas fa-calendar-alt"></i> Demander une démo
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -174,8 +209,8 @@ export default function DetailsPage() {
               </model-viewer>
             </div>
             
-            <div className="hero__3d-controls-info" style={{marginBottom: '60px', fontSize: '0.95rem'}}>
-              <div style={{display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <div className="hero__3d-controls-info details-controls">
+              <div>
                 <span><i className="fas fa-mouse"></i> Glissez pour tourner</span>
                 <span><i className="fas fa-search-plus"></i> Molette pour zoomer</span>
                 <span><i className="fas fa-redo"></i> R pour réinitialiser</span>
@@ -187,7 +222,7 @@ export default function DetailsPage() {
       </section>
 
       {/* Product Details Section */}
-      <section className="features" style={{padding: '80px 0', background: 'var(--bg)'}}>
+      <section className="features details-section">
         <div className="container">
           <h2 className="section__title">Détails du produit</h2>
           <p className="section__subtitle">Design modulaire et technologie avancée</p>
@@ -263,53 +298,51 @@ export default function DetailsPage() {
       </section>
 
       {/* Technical Specifications */}
-      <section className="circular" style={{padding: '80px 0', background: 'linear-gradient(to bottom, rgba(47, 230, 200, 0.03), var(--bg))'}}>
+      <section className="circular details-section" style={{background: 'linear-gradient(to bottom, rgba(47, 230, 200, 0.03), var(--bg))'}}>
         <div className="container">
           <div className="circular__content">
             <div className="circular__text">
               <h2 className="section__title">Spécifications techniques</h2>
               <p className="section__subtitle">Technologie de pointe au service de la santé</p>
               
-              <div style={{marginTop: '40px'}}>
-                <div style={{display: 'grid', gap: '24px'}}>
-                  <div style={{display: 'flex', alignItems: 'start', gap: '16px', padding: '20px', background: 'var(--card)', borderRadius: 'var(--radius)', border: '1px solid var(--border)'}}>
-                    <i className="fas fa-microchip" style={{fontSize: '24px', color: 'var(--blue)', marginTop: '4px'}}></i>
-                    <div>
-                      <h4 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px'}}>Processeur</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.95rem'}}>ARM Cortex-M4, optimisé pour faible consommation</p>
-                    </div>
+              <div className="details-specs-grid">
+                <div className="details-spec-item">
+                  <i className="fas fa-microchip details-spec-icon"></i>
+                  <div className="details-spec-content">
+                    <h4>Processeur</h4>
+                    <p>ARM Cortex-M4, optimisé pour faible consommation</p>
                   </div>
-                  
-                  <div style={{display: 'flex', alignItems: 'start', gap: '16px', padding: '20px', background: 'var(--card)', borderRadius: 'var(--radius)', border: '1px solid var(--border)'}}>
-                    <i className="fas fa-battery-full" style={{fontSize: '24px', color: 'var(--mint)', marginTop: '4px'}}></i>
-                    <div>
-                      <h4 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px'}}>Autonomie</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.95rem'}}>Jusqu&apos;à 7 jours d&apos;autonomie, charge rapide en 2 heures</p>
-                    </div>
+                </div>
+                
+                <div className="details-spec-item">
+                  <i className="fas fa-battery-full details-spec-icon details-spec-icon--mint"></i>
+                  <div className="details-spec-content">
+                    <h4>Autonomie</h4>
+                    <p>Jusqu&apos;à 7 jours d&apos;autonomie, charge rapide en 2 heures</p>
                   </div>
-                  
-                  <div style={{display: 'flex', alignItems: 'start', gap: '16px', padding: '20px', background: 'var(--card)', borderRadius: 'var(--radius)', border: '1px solid var(--border)'}}>
-                    <i className="fas fa-wifi" style={{fontSize: '24px', color: 'var(--blue)', marginTop: '4px'}}></i>
-                    <div>
-                      <h4 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px'}}>Connectivité</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.95rem'}}>Bluetooth 5.0, WiFi, GPS, NFC pour paiement sans contact (optionnel)</p>
-                    </div>
+                </div>
+                
+                <div className="details-spec-item">
+                  <i className="fas fa-wifi details-spec-icon"></i>
+                  <div className="details-spec-content">
+                    <h4>Connectivité</h4>
+                    <p>Bluetooth 5.0, WiFi, GPS, NFC pour paiement sans contact (optionnel)</p>
                   </div>
-                  
-                  <div style={{display: 'flex', alignItems: 'start', gap: '16px', padding: '20px', background: 'var(--card)', borderRadius: 'var(--radius)', border: '1px solid var(--border)'}}>
-                    <i className="fas fa-shield-alt" style={{fontSize: '24px', color: 'var(--mint)', marginTop: '4px'}}></i>
-                    <div>
-                      <h4 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px'}}>Sécurité</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.95rem'}}>Chiffrement AES-256, authentification biométrique, conformité RGPD</p>
-                    </div>
+                </div>
+                
+                <div className="details-spec-item">
+                  <i className="fas fa-shield-alt details-spec-icon details-spec-icon--mint"></i>
+                  <div className="details-spec-content">
+                    <h4>Sécurité</h4>
+                    <p>Chiffrement AES-256, authentification biométrique, conformité RGPD</p>
                   </div>
-                  
-                  <div style={{display: 'flex', alignItems: 'start', gap: '16px', padding: '20px', background: 'var(--card)', borderRadius: 'var(--radius)', border: '1px solid var(--border)'}}>
-                    <i className="fas fa-tint" style={{fontSize: '24px', color: 'var(--blue)', marginTop: '4px'}}></i>
-                    <div>
-                      <h4 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px'}}>Résistance</h4>
-                      <p style={{color: 'var(--muted)', fontSize: '0.95rem'}}>IP68 (étanche jusqu&apos;à 1.5m), résistant aux chocs et à la poussière</p>
-                    </div>
+                </div>
+                
+                <div className="details-spec-item">
+                  <i className="fas fa-tint details-spec-icon"></i>
+                  <div className="details-spec-content">
+                    <h4>Résistance</h4>
+                    <p>IP68 (étanche jusqu&apos;à 1.5m), résistant aux chocs et à la poussière</p>
                   </div>
                 </div>
               </div>
@@ -331,7 +364,7 @@ export default function DetailsPage() {
       </section>
 
       {/* Circular Economy Details */}
-      <section className="impact" style={{padding: '80px 0'}}>
+      <section className="impact details-section">
         <div className="container">
           <h2 className="section__title">Économie circulaire intégrée</h2>
           <p className="section__subtitle">Réduire les déchets électroniques, prolonger la durée de vie</p>
@@ -375,7 +408,7 @@ export default function DetailsPage() {
       </section>
 
       {/* Back to home button */}
-      <section style={{padding: '60px 0', textAlign: 'center'}}>
+      <section className="details-section" style={{textAlign: 'center'}}>
         <div className="container">
           <Link href="/" className="btn btn--primary" style={{fontSize: '1.1rem', padding: '16px 32px'}}>
             <i className="fas fa-arrow-left"></i> Retour à l&apos;accueil
