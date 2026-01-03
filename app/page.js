@@ -62,7 +62,7 @@ export default function Home() {
               <li><a href="#contact" className="navbar__link" data-section="contact">Contact</a></li>
             </ul>
             
-            <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+            <div className="navbar__actions">
               {/* Theme Toggle */}
               <div className="theme-toggle" id="themeToggle">
                 <button className="theme-toggle__button" id="themeButton" aria-label="Changer le thème" title="Thème">
@@ -82,7 +82,7 @@ export default function Home() {
               </div>
               
               <button className="navbar__cta" aria-label="Demander une démo">
-                <i className="fas fa-calendar-alt"></i> Demander une démo
+                <i className="fas fa-calendar-alt"></i> <span>Demander une démo</span>
               </button>
             </div>
             

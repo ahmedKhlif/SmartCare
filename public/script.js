@@ -807,74 +807,101 @@ if (heroTitle) {
 
 // Theme Management
 function initTheme() {
-    const themeButton = document.getElementById('themeButton');
-    const themeMenu = document.getElementById('themeMenu');
-    const themeIcon = document.getElementById('themeIcon');
-    const themeOptions = document.querySelectorAll('.theme-toggle__option');
-    
-    if (!themeButton || !themeMenu || !themeIcon) return;
-    
-    // Get saved theme or default to 'auto'
-    let currentTheme = localStorage.getItem('theme') || 'auto';
-    
-    // Apply theme
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        currentTheme = theme;
+    // Wait for DOM to be ready
+    const tryInit = () => {
+        const themeButton = document.getElementById('themeButton');
+        const themeMenu = document.getElementById('themeMenu');
+        const themeIcon = document.getElementById('themeIcon');
         
-        // Update icon
-        if (theme === 'dark') {
-            themeIcon.className = 'fas fa-moon';
-        } else if (theme === 'light') {
-            themeIcon.className = 'fas fa-sun';
-        } else {
-            themeIcon.className = 'fas fa-adjust';
+        if (!themeButton || !themeMenu || !themeIcon) {
+            return false;
         }
         
-        // Update active option
-        themeOptions.forEach(option => {
-            if (option.dataset.theme === theme) {
-                option.classList.add('active');
-            } else {
-                option.classList.remove('active');
+        const themeOptions = document.querySelectorAll('.theme-toggle__option');
+        
+        // Get saved theme or default to 'auto'
+        let currentTheme = localStorage.getItem('theme') || 'auto';
+        
+        // Apply theme function
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
+            
+            // Update icon
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-moon';
+                } else if (theme === 'light') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-adjust';
+                }
+            }
+            
+            // Update active option
+            const options = document.querySelectorAll('.theme-toggle__option');
+            options.forEach(option => {
+                if (option.getAttribute('data-theme') === theme) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+            
+            // Force reflow for CSS to apply
+            document.documentElement.offsetHeight;
+        }
+        
+        // Apply saved theme immediately
+        applyTheme(currentTheme);
+        
+        // Toggle menu
+        themeButton.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            themeMenu.classList.toggle('open');
+        };
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle && !themeToggle.contains(e.target)) {
+                themeMenu.classList.remove('open');
             }
         });
-    }
-    
-    // Apply saved theme
-    applyTheme(currentTheme);
-    
-    // Toggle menu
-    themeButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        themeMenu.classList.toggle('open');
-    });
-    
-    // Close menu when clicking outside
-    const themeToggle = document.getElementById('themeToggle');
-    document.addEventListener('click', (e) => {
-        if (themeToggle && !themeToggle.contains(e.target)) {
-            themeMenu.classList.remove('open');
-        }
-    });
-    
-    // Handle theme selection
-    themeOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            const theme = option.dataset.theme;
-            applyTheme(theme);
-            themeMenu.classList.remove('open');
+        
+        // Handle theme selection
+        themeOptions.forEach(option => {
+            option.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const theme = option.getAttribute('data-theme');
+                applyTheme(theme);
+                themeMenu.classList.remove('open');
+            };
         });
-    });
+        
+        // Listen for system theme changes (for auto mode)
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        mediaQuery.addEventListener('change', () => {
+            if (currentTheme === 'auto') {
+                applyTheme('auto');
+            }
+        });
+        
+        return true;
+    };
     
-    // Listen for system theme changes (for auto mode)
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', (e) => {
-        if (currentTheme === 'auto') {
-            applyTheme('auto');
-        }
-    });
+    // Try immediately, then retry if needed
+    if (!tryInit()) {
+        setTimeout(() => {
+            if (!tryInit()) {
+                setTimeout(tryInit, 200);
+            }
+        }, 100);
+    }
 }
 
 // Initialize when DOM is ready

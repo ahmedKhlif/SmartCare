@@ -125,7 +125,7 @@ export default function DetailsPage() {
               <li><Link href="/#contact" className="navbar__link">Contact</Link></li>
             </ul>
             
-            <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+            <div className="navbar__actions">
               {/* Theme Toggle */}
               <div className="theme-toggle" id="themeToggle">
                 <button className="theme-toggle__button" id="themeButton" aria-label="Changer le thème" title="Thème">
@@ -145,7 +145,7 @@ export default function DetailsPage() {
               </div>
               
               <Link href="/#contact" className="navbar__cta">
-                <i className="fas fa-calendar-alt"></i> Demander une démo
+                <i className="fas fa-calendar-alt"></i> <span>Demander une démo</span>
               </Link>
             </div>
           </div>

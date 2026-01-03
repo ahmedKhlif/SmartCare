@@ -31,6 +31,14 @@ export default function RootLayout({ children }) {
               (function() {
                 const theme = localStorage.getItem('theme') || 'auto';
                 document.documentElement.setAttribute('data-theme', theme);
+                
+                // Apply auto theme immediately
+                if (theme === 'auto') {
+                  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (prefersDark) {
+                    document.documentElement.setAttribute('data-theme', 'auto');
+                  }
+                }
               })();
             `,
           }}
