@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartCare Bracelet - Un dispositif médical intelligent qui améliore l'autonomie, la sécurité et le calme des enfants avec Trisomie 21.">
+    <meta name="keywords" content="SmartCare, bracelet médical, Trisomie 21, dispositif médical, sécurité enfants, IoT santé">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="SmartCare Bracelet - Dispositif médical intelligent pour enfants">
+    <meta property="og:description" content="Un dispositif médical intelligent qui améliore l'autonomie, la sécurité et le calme des enfants avec Trisomie 21.">
+    <meta property="og:type" content="website">
+    
+    <title>SmartCare Bracelet - Dispositif médical intelligent pour enfants</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Model Viewer -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Sticky Navbar -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Navigation principale">
+        <div class="container">
+            <div class="navbar__content">
+                <a href="#hero" class="navbar__logo" aria-label="SmartCare - Retour à l'accueil">
+                    <i class="fas fa-heartbeat"></i>
+                    <span class="navbar__logo-text">SmartCare</span>
+                </a>
+                
+                <ul class="navbar__links" id="navbarLinks">
+                    <li><a href="#features" class="navbar__link" data-section="features">Fonctionnalités</a></li>
+                    <li><a href="#circular" class="navbar__link" data-section="circular">Design Circulaire</a></li>
+                    <li><a href="#pricing" class="navbar__link" data-section="pricing">Tarifs</a></li>
+                    <li><a href="#impact" class="navbar__link" data-section="impact">Impact</a></li>
+                    <li><a href="#faq" class="navbar__link" data-section="faq">FAQ</a></li>
+                    <li><a href="#contact" class="navbar__link" data-section="contact">Contact</a></li>
+                </ul>
+                
+                <button class="navbar__cta" aria-label="Demander une démo">
+                    <i class="fas fa-calendar-alt"></i> Demander une démo
+                </button>
+                
+                <button class="navbar__toggle" id="navbarToggle" aria-label="Menu mobile" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero__bg-blobs">
+            <div class="hero__blob hero__blob--1"></div>
+            <div class="hero__blob hero__blob--2"></div>
+        </div>
+        
+        <div class="container">
+            <div class="hero__content">
+                <div class="hero__text">
+                    <h1 class="hero__title">SmartCare Bracelet</h1>
+                    <p class="hero__subtitle">
+                        Un dispositif médical intelligent qui améliore l'autonomie, la sécurité et le calme des enfants avec Trisomie 21.
+                    </p>
+                    <div class="hero__ctas">
+                        <button class="btn btn--primary" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})" aria-label="Explorer les fonctionnalités">
+                            <i class="fas fa-arrow-down"></i> Explorer les fonctionnalités
+                        </button>
+                        <button class="btn btn--secondary" id="watchDemoBtn" aria-label="Regarder la démo vidéo">
+                            <i class="fas fa-play-circle"></i> Regarder la démo
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero__image-wrapper">
+                    <div class="hero__image-container">
+                        <!-- 3D Model Viewer -->
+                        <model-viewer
+                            src="assets/3D_model/base_basic_shaded.glb"
+                            alt="SmartCare Bracelet - Modèle 3D interactif"
+                            class="hero__3d-model"
+                            id="hero3DModel"
+                            auto-rotate
+                            auto-rotate-delay="0"
+                            camera-controls
+                            touch-action="none"
+                            shadow-intensity="1.5"
+                            shadow-softness="1"
+                            exposure="1.2"
+                            environment-image="neutral"
+                            skybox-image=""
+                            ar="false"
+                            interaction-policy="allow-when-focused"
+                            camera-orbit="0deg 75deg 105%"
+                            min-camera-orbit="auto 0deg auto"
+                            max-camera-orbit="auto 180deg auto"
+                            min-field-of-view="25deg"
+                            max-field-of-view="65deg"
+                            field-of-view="45deg"
+                            camera-target="0m 0m 0m"
+                            min-camera-target="auto auto auto"
+                            max-camera-target="auto auto auto"
+                            interpolation-decay="100"
+                            loading="lazy"
+                            reveal="auto"
+                            tone-mapping="commerce"
+                            render-scale="1"
+                            disable-tap
+                            aria-label="Modèle 3D interactif du SmartCare Bracelet. Faites glisser pour faire pivoter, utilisez la molette pour zoomer, cliquez et maintenez pour déplacer."
+                        >
+                            <!-- Fallback image while loading -->
+                            <img src="assets/bracelet-3d.png" alt="SmartCare Bracelet" slot="poster" class="hero__3d-fallback">
+                            
+                            <!-- Loading indicator -->
+                            <div slot="poster" class="hero__3d-loading">
+                                <div class="hero__3d-spinner"></div>
+                                <p>Chargement du modèle 3D...</p>
+                            </div>
+                        </model-viewer>
+                        
+                        <!-- 3D Controls Info -->
+                        <div class="hero__3d-controls-info">
+                            <i class="fas fa-mouse"></i>
+                            <span>Glissez pour tourner • Molette pour zoomer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero__badges">
+                <div class="hero__badge">
+                    <i class="fas fa-network-wired hero__badge-icon"></i>
+                    <span class="hero__badge-text">IoT + IA</span>
+                </div>
+                <div class="hero__badge">
+                    <i class="fas fa-bolt hero__badge-icon"></i>
+                    <span class="hero__badge-text">Sécurité en temps réel</span>
+                </div>
+                <div class="hero__badge">
+                    <i class="fas fa-recycle hero__badge-icon"></i>
+                    <span class="hero__badge-text">Design circulaire</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Demo Video Section -->
+    <section class="video-section" id="videoSection">
+        <div class="container">
+            <div class="video-section__content">
+                <h2 class="section__title">Découvrez SmartCare en action</h2>
+                <div class="video-card">
+                    <div class="video-card__wrapper" id="videoWrapper">
+                        <video class="video-card__video" id="productVideo" preload="metadata" aria-label="Démo produit SmartCare">
+                            <source src="assets/smartcare-video.mp4" type="video/mp4">
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                        <button class="video-card__play" id="videoPlayBtn" aria-label="Lire la vidéo">
+                            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="32" cy="32" r="32" fill="white" fill-opacity="0.9"/>
+                                <path d="M26 20L44 32L26 44V20Z" fill="#26a6ff"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="video-card__caption">Démo concept produit (10–20s)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features fade-in" id="features">
+        <div class="container">
+            <h2 class="section__title">Fonctionnalités principales</h2>
+            <p class="section__subtitle">Technologie avancée au service de l'autonomie et de la sécurité</p>
+            
+            <div class="features__grid">
+                <div class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" stroke="#26a6ff" stroke-width="2" fill="none"/>
+                            <path d="M24 12V24L32 28" stroke="#26a6ff" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Surveillance en temps réel</h3>
+                    <p class="feature-card__text">
+                        Suivi continu de la fréquence cardiaque, des mouvements et des signaux de stress pour une détection précoce des situations préoccupantes.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="18" stroke="#2fe6c8" stroke-width="2" fill="none"/>
+                            <circle cx="24" cy="24" r="4" fill="#2fe6c8"/>
+                            <path d="M24 6L24 2M24 46L24 42M6 24L2 24M46 24L42 24" stroke="#2fe6c8" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Sécurité GPS</h3>
+                    <p class="feature-card__text">
+                        Géolocalisation discrète avec alertes de zones sécurisées. Permet aux parents de savoir où se trouve leur enfant en toute circonstance.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 8C16.27 8 10 14.27 10 22C10 29.73 24 40 24 40C24 40 38 29.73 38 22C38 14.27 31.73 8 24 8Z" stroke="#26a6ff" stroke-width="2" fill="none"/>
+                            <circle cx="24" cy="22" r="6" stroke="#26a6ff" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Assistance au calme</h3>
+                    <p class="feature-card__text">
+                        Guidance douce par son et voix pour aider à la désescalade lors de moments difficiles, favorisant le retour au calme.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="12" width="32" height="24" rx="2" stroke="#2fe6c8" stroke-width="2" fill="none"/>
+                            <path d="M16 20L22 26L32 16" stroke="#2fe6c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Coordination familiale</h3>
+                    <p class="feature-card__text">
+                        Partage sécurisé des données entre parents, éducateurs et médecins pour une prise en charge coordonnée et efficace.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="how-it-works slide-in-left" id="howItWorks">
+        <div class="container">
+            <h2 class="section__title">Comment ça fonctionne</h2>
+            <p class="section__subtitle">Un écosystème connecté pour une sécurité optimale</p>
+            
+            <div class="how-it-works__flow">
+                <div class="flow-step">
+                    <div class="flow-step__icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="12" width="24" height="16" rx="2" stroke="#26a6ff" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="20" r="4" fill="#26a6ff"/>
+                        </svg>
+                    </div>
+                    <h3 class="flow-step__title">Bracelet</h3>
+                    <p class="flow-step__text">Collecte des données en temps réel</p>
+                </div>
+                
+                <div class="flow-step__arrow">→</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step__icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="6" y="4" width="28" height="32" rx="3" stroke="#2fe6c8" stroke-width="2" fill="none"/>
+                            <rect x="12" y="8" width="16" height="10" rx="1" fill="#2fe6c8" fill-opacity="0.2"/>
+                        </svg>
+                    </div>
+                    <h3 class="flow-step__title">Application mobile</h3>
+                    <p class="flow-step__text">Interface intuitive pour les parents</p>
+                </div>
+                
+                <div class="flow-step__arrow">→</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step__icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 8L28 16H24V28H16V16H12L20 8Z" fill="#26a6ff"/>
+                            <ellipse cx="20" cy="32" rx="8" ry="4" fill="#26a6ff" fill-opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <h3 class="flow-step__title">Plateforme cloud</h3>
+                    <p class="flow-step__text">Analyse et stockage sécurisé</p>
+                </div>
+                
+                <div class="flow-step__arrow">→</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step__icon">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="20" cy="20" r="12" stroke="#2fe6c8" stroke-width="2" fill="none"/>
+                            <path d="M20 12V20L26 24" stroke="#2fe6c8" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="flow-step__title">Parents / Éducateurs</h3>
+                    <p class="flow-step__text">Alertes et rapports détaillés</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Circular Economy Section -->
+    <section class="circular fade-in" id="circular">
+        <div class="container">
+            <div class="circular__content">
+                <div class="circular__text">
+                    <h2 class="section__title">Design circulaire</h2>
+                    <p class="section__subtitle">Durabilité et réparabilité au cœur du produit</p>
+                    <p class="circular__description">
+                        SmartCare est conçu avec une approche modulaire innovante : le cœur électronique est détachable, 
+                        la batterie est remplaçable, et le bracelet est interchangeable. Cette architecture permet 
+                        une réparation facile, une mise à niveau progressive et un recyclage optimisé en fin de vie.
+                    </p>
+                    
+                    <div class="circular__cards">
+                        <div class="circular-card">
+                            <div class="circular-card__icon">
+                                <i class="fas fa-redo-alt"></i>
+                            </div>
+                            <h3 class="circular-card__title">Réutilisation</h3>
+                            <p class="circular-card__text">Composants modulaires réutilisables</p>
+                        </div>
+                        
+                        <div class="circular-card">
+                            <div class="circular-card__icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <h3 class="circular-card__title">Réparation</h3>
+                            <p class="circular-card__text">Maintenance simple et accessible</p>
+                        </div>
+                        
+                        <div class="circular-card">
+                            <div class="circular-card__icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <h3 class="circular-card__title">Reconditionnement</h3>
+                            <p class="circular-card__text">Recyclage et valorisation optimisés</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="circular__visual">
+                    <div class="circular__image-wrapper">
+                        <img src="assets/prototype.png" alt="Vue éclatée du prototype SmartCare montrant les composants modulaires" class="circular__image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing fade-in" id="pricing">
+        <div class="container">
+            <h2 class="section__title">Tarifs et offres</h2>
+            <p class="section__subtitle">Choisissez le plan qui correspond à vos besoins</p>
+            
+            <!-- Pricing Toggle -->
+            <div class="pricing__toggle">
+                <span class="pricing__toggle-label">Facturation mensuelle</span>
+                <label class="pricing__switch">
+                    <input type="checkbox" id="pricingToggle">
+                    <span class="pricing__slider"></span>
+                </label>
+                <span class="pricing__toggle-label">Facturation annuelle <span class="pricing__badge">-20%</span></span>
+            </div>
+            
+            <!-- Pricing Cards -->
+            <div class="pricing__grid">
+                <!-- Starter Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-card__header">
+                        <h3 class="pricing-card__title">Starter</h3>
+                        <p class="pricing-card__subtitle">Pour commencer</p>
+                    </div>
+                    <div class="pricing-card__price">
+                        <span class="pricing-card__amount" data-monthly="950" data-yearly="760">950</span>
+                        <span class="pricing-card__currency">DT</span>
+                        <span class="pricing-card__period">/mois</span>
+                    </div>
+                    <div class="pricing-card__device">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Bracelet inclus</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Surveillance en temps réel</li>
+                        <li><i class="fas fa-check"></i> Géolocalisation GPS</li>
+                        <li><i class="fas fa-check"></i> Alertes de sécurité</li>
+                        <li><i class="fas fa-check"></i> Application mobile</li>
+                        <li><i class="fas fa-check"></i> Support email</li>
+                    </ul>
+                    <button class="btn btn--secondary btn--full pricing-card__cta">
+                        <i class="fas fa-shopping-cart"></i> Choisir ce plan
+                    </button>
+                </div>
+                
+                <!-- Professional Plan (Featured) -->
+                <div class="pricing-card pricing-card--featured">
+                    <div class="pricing-card__badge">
+                        <i class="fas fa-star"></i> Le plus populaire
+                    </div>
+                    <div class="pricing-card__header">
+                        <h3 class="pricing-card__title">Professional</h3>
+                        <p class="pricing-card__subtitle">Pour les familles</p>
+                    </div>
+                    <div class="pricing-card__price">
+                        <span class="pricing-card__amount" data-monthly="1590" data-yearly="1270">1590</span>
+                        <span class="pricing-card__currency">DT</span>
+                        <span class="pricing-card__period">/mois</span>
+                    </div>
+                    <div class="pricing-card__device">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Bracelet inclus</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Tout dans Starter</li>
+                        <li><i class="fas fa-check"></i> Assistance au calme (IA)</li>
+                        <li><i class="fas fa-check"></i> Partage avec éducateurs</li>
+                        <li><i class="fas fa-check"></i> Rapports détaillés</li>
+                        <li><i class="fas fa-check"></i> Support prioritaire</li>
+                        <li><i class="fas fa-check"></i> Mises à jour gratuites</li>
+                    </ul>
+                    <button class="btn btn--primary btn--full pricing-card__cta">
+                        <i class="fas fa-rocket"></i> Choisir ce plan
+                    </button>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-card__header">
+                        <h3 class="pricing-card__title">Enterprise</h3>
+                        <p class="pricing-card__subtitle">Pour les institutions</p>
+                    </div>
+                    <div class="pricing-card__price">
+                        <span class="pricing-card__amount" data-monthly="3190" data-yearly="2550">3190</span>
+                        <span class="pricing-card__currency">DT</span>
+                        <span class="pricing-card__period">/mois</span>
+                    </div>
+                    <div class="pricing-card__device">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Bracelets multiples</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Tout dans Professional</li>
+                        <li><i class="fas fa-check"></i> Gestion multi-utilisateurs</li>
+                        <li><i class="fas fa-check"></i> Intégration API</li>
+                        <li><i class="fas fa-check"></i> Tableau de bord avancé</li>
+                        <li><i class="fas fa-check"></i> Support dédié 24/7</li>
+                        <li><i class="fas fa-check"></i> Formation personnalisée</li>
+                        <li><i class="fas fa-check"></i> SLA garanti</li>
+                    </ul>
+                    <button class="btn btn--secondary btn--full pricing-card__cta">
+                        <i class="fas fa-phone"></i> Nous contacter
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Additional Info -->
+            <div class="pricing__info">
+                <div class="pricing__info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <h4>Garantie 2 ans</h4>
+                        <p>Sur tous les bracelets SmartCare</p>
+                    </div>
+                </div>
+                <div class="pricing__info-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <div>
+                        <h4>Annulation gratuite</h4>
+                        <p>À tout moment, sans engagement</p>
+                    </div>
+                </div>
+                <div class="pricing__info-item">
+                    <i class="fas fa-headset"></i>
+                    <div>
+                        <h4>Support inclus</h4>
+                        <p>Assistance technique disponible</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Pricing -->
+            <div class="pricing__faq">
+                <h3 class="pricing__faq-title">Questions fréquentes sur les tarifs</h3>
+                <div class="pricing__faq-list">
+                    <div class="pricing-faq-item">
+                        <button class="pricing-faq-item__question">
+                            <span>Le bracelet est-il inclus dans le prix ?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="pricing-faq-item__answer">
+                            <p>Oui, le bracelet SmartCare est inclus dans tous nos plans. Vous recevrez un bracelet neuf lors de votre première commande.</p>
+                        </div>
+                    </div>
+                    <div class="pricing-faq-item">
+                        <button class="pricing-faq-item__question">
+                            <span>Puis-je changer de plan plus tard ?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="pricing-faq-item__answer">
+                            <p>Absolument ! Vous pouvez mettre à niveau ou rétrograder votre plan à tout moment. Les changements prennent effet au prochain cycle de facturation.</p>
+                        </div>
+                    </div>
+                    <div class="pricing-faq-item">
+                        <button class="pricing-faq-item__question">
+                            <span>Y a-t-il des frais cachés ?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="pricing-faq-item__answer">
+                            <p>Non, nos prix sont transparents. Le prix affiché inclut le bracelet, l'abonnement mensuel, et toutes les fonctionnalités listées. Les seuls frais supplémentaires seraient pour des accessoires optionnels.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Impact Section -->
+    <section class="impact fade-in" id="impact">
+        <div class="container">
+            <div class="impact__content">
+                <div class="impact__statement">
+                    <h2 class="section__title">Impact social</h2>
+                    <p class="impact__quote">
+                        SmartCare transforme le quotidien des familles en offrant une tranquillité d'esprit 
+                        et en favorisant l'autonomie des enfants avec Trisomie 21.
+                    </p>
+                </div>
+                
+                <div class="impact__points">
+                    <div class="impact-point">
+                        <div class="impact-point__icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="impact-point__title">Réduction de l'anxiété familiale</h3>
+                        <p class="impact-point__text">
+                            Les alertes en temps réel et la géolocalisation permettent aux parents de se sentir 
+                            rassurés tout en respectant l'autonomie de leur enfant.
+                        </p>
+                    </div>
+                    
+                    <div class="impact-point">
+                        <div class="impact-point__icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3 class="impact-point__title">Amélioration de l'autonomie</h3>
+                        <p class="impact-point__text">
+                            L'assistance au calme et le suivi médical favorisent l'indépendance progressive 
+                            et la confiance en soi de l'enfant.
+                        </p>
+                    </div>
+                    
+                    <div class="impact-point">
+                        <div class="impact-point__icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3 class="impact-point__title">Éducation inclusive</h3>
+                        <p class="impact-point__text">
+                            Le partage sécurisé des données avec les équipes éducatives et médicales 
+                            facilite une prise en charge coordonnée et personnalisée.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq slide-in-left" id="faq">
+        <div class="container">
+            <h2 class="section__title">Questions fréquentes</h2>
+            <p class="section__subtitle">Tout ce que vous devez savoir sur SmartCare</p>
+            
+            <div class="faq__list">
+                <div class="faq-item">
+                    <button class="faq-item__question" aria-expanded="false">
+                        <span>Est-ce un véritable dispositif médical ?</span>
+                        <svg class="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-item__answer">
+                        <p>
+                            SmartCare est conçu comme un dispositif médical de classe II, soumis aux réglementations 
+                            européennes (MDR). Il est destiné à la surveillance et à l'assistance, mais ne remplace 
+                            pas les soins médicaux professionnels. Nous travaillons en étroite collaboration avec des 
+                            professionnels de santé pour garantir la sécurité et l'efficacité du produit.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-item__question" aria-expanded="false">
+                        <span>Quelles données sont collectées ?</span>
+                        <svg class="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-item__answer">
+                        <p>
+                            Nous collectons uniquement les données nécessaires au fonctionnement du dispositif : 
+                            fréquence cardiaque, mouvements, signaux de stress, et géolocalisation (uniquement 
+                            lorsque activée). Toutes les données sont chiffrées, stockées de manière sécurisée, 
+                            et ne sont partagées qu'avec les personnes autorisées (parents, éducateurs, médecins) 
+                            via un système de consentement explicite.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-item__question" aria-expanded="false">
+                        <span>Comment fonctionne le GPS ?</span>
+                        <svg class="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-item__answer">
+                        <p>
+                            Le GPS fonctionne de manière discrète et respectueuse de la vie privée. Les parents 
+                            peuvent définir des zones sécurisées (école, domicile, etc.). Si l'enfant sort de 
+                            ces zones ou si une alerte est déclenchée, les parents reçoivent une notification. 
+                            La géolocalisation peut être désactivée à tout moment par les parents.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-item__question" aria-expanded="false">
+                        <span>Comment la confidentialité est-elle gérée ?</span>
+                        <svg class="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-item__answer">
+                        <p>
+                            La confidentialité est notre priorité absolue. Nous respectons le RGPD et appliquons 
+                            les principes de minimisation des données, de consentement explicite, et de sécurité 
+                            renforcée. Les données sont chiffrées en transit et au repos, et seuls les utilisateurs 
+                            autorisés peuvent y accéder. Nous ne vendons jamais de données à des tiers.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-item__question" aria-expanded="false">
+                        <span>Qu'est-ce qui le rend circulaire ?</span>
+                        <svg class="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-item__answer">
+                        <p>
+                            Le design modulaire permet la réparation, la mise à niveau et le recyclage. Le cœur 
+                            électronique peut être remplacé sans jeter le bracelet, la batterie est remplaçable, 
+                            et les matériaux sont choisis pour leur recyclabilité. Nous proposons également un 
+                            programme de reprise et de reconditionnement pour prolonger la vie du produit.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact fade-in" id="contact">
+        <div class="container">
+            <h2 class="section__title">Contactez-nous</h2>
+            <p class="section__subtitle">Nous sommes là pour répondre à vos questions</p>
+            
+            <form class="contact__form" id="contactForm" novalidate>
+                <div class="form-group">
+                    <label for="name" class="form-label">
+                        <i class="fas fa-user"></i> Nom complet
+                    </label>
+                    <input type="text" id="name" name="name" class="form-input" required aria-required="true">
+                    <span class="form-error" id="nameError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input type="email" id="email" name="email" class="form-input" required aria-required="true">
+                    <span class="form-error" id="emailError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role" class="form-label">
+                        <i class="fas fa-briefcase"></i> Rôle
+                    </label>
+                    <select id="role" name="role" class="form-input" required aria-required="true">
+                        <option value="">Sélectionnez votre rôle</option>
+                        <option value="parent">Parent</option>
+                        <option value="educator">Éducateur</option>
+                        <option value="doctor">Médecin</option>
+                        <option value="investor">Investisseur</option>
+                    </select>
+                    <span class="form-error" id="roleError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message" class="form-label">
+                        <i class="fas fa-comment-alt"></i> Message
+                    </label>
+                    <textarea id="message" name="message" class="form-input form-textarea" rows="5" required aria-required="true"></textarea>
+                    <span class="form-error" id="messageError"></span>
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--full" aria-label="Envoyer le formulaire">
+                    <i class="fas fa-paper-plane"></i> Envoyer
+                </button>
+            </form>
+            
+            <div class="contact__cta">
+                <i class="fas fa-shield-alt"></i>
+                <p class="contact__cta-text">Construisez des routines quotidiennes plus sûres avec SmartCare.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__brand">
+                    <h3 class="footer__logo">
+                        <i class="fas fa-heartbeat"></i> SmartCare
+                    </h3>
+                    <p class="footer__tagline">Dispositif médical intelligent pour enfants</p>
+                </div>
+                
+                <div class="footer__links">
+                    <div class="footer__column">
+                        <h4 class="footer__title">Produit</h4>
+                        <ul>
+                            <li><a href="#features">Fonctionnalités</a></li>
+                            <li><a href="#circular">Design circulaire</a></li>
+                            <li><a href="#economics">Économie</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer__column">
+                        <h4 class="footer__title">Ressources</h4>
+                        <ul>
+                            <li><a href="#impact">Impact</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer__column">
+                        <h4 class="footer__title">Social</h4>
+                        <ul class="footer__social">
+                            <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
+                            <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a></li>
+                            <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p class="footer__disclaimer">
+                    SmartCare est un dispositif médical en développement. Les informations présentées sont 
+                    à titre informatif et peuvent être sujettes à modification.
+                </p>
+                <p class="footer__copyright">&copy; 2024 SmartCare. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal__overlay" id="modalOverlay"></div>
+        <div class="modal__content">
+            <button class="modal__close" id="modalClose" aria-label="Fermer la vidéo">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal__video-wrapper">
+                <video class="modal__video" id="modalVideo" controls>
+                    <source src="assets/smartcare-video.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true">
+        <div class="toast__content">
+            <span class="toast__message" id="toastMessage"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
