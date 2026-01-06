@@ -122,8 +122,8 @@ export default function Home() {
           const data = await response.json()
 
           if (data.success) {
-            // Show success toast
-            showToast(data.message, 'success')
+            // Show success message
+            console.log('✅ Message sent:', data.message)
             contactForm.reset()
             submitBtn.innerHTML = '<i class="fas fa-check"></i> Sent Successfully!'
             setTimeout(() => {
@@ -131,34 +131,16 @@ export default function Home() {
               submitBtn.innerHTML = originalText
             }, 3000)
           } else {
-            showToast('Error: ' + data.message, 'error')
+            console.error('❌ Error:', data.message)
             submitBtn.disabled = false
             submitBtn.innerHTML = originalText
           }
         } catch (error) {
           console.error('Form submission error:', error)
-          showToast('An error occurred while sending your message. Please try again.', 'error')
           submitBtn.disabled = false
           submitBtn.innerHTML = originalText
         }
       })
-    }
-
-    // Toast notification function
-    function showToast(message, type = 'info') {
-      const toast = document.createElement('div')
-      toast.className = `toast toast-${type}`
-      toast.textContent = message
-      document.body.appendChild(toast)
-      
-      // Trigger animation
-      setTimeout(() => toast.classList.add('show'), 10)
-      
-      // Remove after 3 seconds
-      setTimeout(() => {
-        toast.classList.remove('show')
-        setTimeout(() => toast.remove(), 300)
-      }, 3000)
     }
 
     // Initialize custom cursor directly
