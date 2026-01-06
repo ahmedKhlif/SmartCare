@@ -15,6 +15,31 @@ export default function DetailsPage() {
   useEffect(() => {
     // Load all client-side scripts after component mounts
     if (typeof window !== 'undefined') {
+      // Initialize navbar toggle
+      const navbarToggle = document.getElementById('navbarToggle')
+      const navbarLinks = document.getElementById('navbarLinks')
+      const navLinks = document.querySelectorAll('.navbar__link')
+
+      if (navbarToggle && navbarLinks) {
+        // Mobile menu toggle
+        navbarToggle.addEventListener('click', (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          const isExpanded = navbarToggle.getAttribute('aria-expanded') === 'true'
+          navbarToggle.setAttribute('aria-expanded', !isExpanded)
+          navbarLinks.classList.toggle('open')
+          console.log('Navbar toggle clicked, expanded:', !isExpanded)
+        })
+
+        // Close mobile menu when clicking a link
+        navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            navbarLinks.classList.remove('open')
+            navbarToggle.setAttribute('aria-expanded', 'false')
+          })
+        })
+      }
+
       // Check if script is already loaded
       if (!document.querySelector('script[src="/script.js"]')) {
         // Wait a bit for DOM to be ready

@@ -69,6 +69,31 @@ export default function Home() {
   useEffect(() => {
     if (typeof window === 'undefined') return
 
+    // Initialize navbar toggle
+    const navbarToggle = document.getElementById('navbarToggle')
+    const navbarLinks = document.getElementById('navbarLinks')
+    const navLinks = document.querySelectorAll('.navbar__link')
+
+    if (navbarToggle && navbarLinks) {
+      // Mobile menu toggle
+      navbarToggle.addEventListener('click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        const isExpanded = navbarToggle.getAttribute('aria-expanded') === 'true'
+        navbarToggle.setAttribute('aria-expanded', !isExpanded)
+        navbarLinks.classList.toggle('open')
+        console.log('Navbar toggle clicked, expanded:', !isExpanded)
+      })
+
+      // Close mobile menu when clicking a link
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          navbarLinks.classList.remove('open')
+          navbarToggle.setAttribute('aria-expanded', 'false')
+        })
+      })
+    }
+
     // Initialize custom cursor directly
     const cursor = document.getElementById('cursor')
     const cursorDot = document.getElementById('cursorDot')

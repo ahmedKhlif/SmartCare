@@ -591,15 +591,16 @@ button {
         transition: var(--transition);
         border-bottom: 1px solid var(--border);
         box-shadow: var(--shadow-lg);
-        z-index: 999;
+        z-index: 1000;
         max-height: calc(100vh - 70px);
         overflow-y: auto;
+        display: flex !important;
     }
     
     .navbar__links.open {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
+        transform: translateY(0) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
     }
     
     .navbar__links li {
