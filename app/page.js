@@ -346,7 +346,9 @@ export default function Home() {
     { value: 'parent', label: t.contactSection.roles.parent },
     { value: 'educator', label: t.contactSection.roles.educator },
     { value: 'doctor', label: t.contactSection.roles.doctor },
-    { value: 'investor', label: t.contactSection.roles.investor }
+    { value: 'student', label: t.contactSection.roles.student || 'Student' },
+    { value: 'investor', label: t.contactSection.roles.investor },
+    { value: 'other', label: t.contactSection.roles.other || 'Other' }
   ]
 
   const circularCards = t.circularSection.cards || []

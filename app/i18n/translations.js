@@ -220,7 +220,9 @@ const translations = {
         parent: "Parent",
         educator: "Educator",
         doctor: "Doctor",
-        investor: "Investor"
+        student: "Student",
+        investor: "Investor",
+        other: "Other"
       },
       messageLabel: "Message",
       submit: "Send",
@@ -585,7 +587,9 @@ const translations = {
         parent: "Parent",
         educator: "Éducateur",
         doctor: "Médecin",
-        investor: "Investisseur"
+        student: "Étudiant",
+        investor: "Investisseur",
+        other: "Autre"
       },
       messageLabel: "Message",
       submit: "Envoyer",
@@ -950,7 +954,9 @@ const translations = {
         parent: "ولي أمر",
         educator: "مربٍ",
         doctor: "طبيب",
-        investor: "مستثمر"
+        student: "طالب",
+        investor: "مستثمر",
+        other: "آخر"
       },
       messageLabel: "الرسالة",
       submit: "إرسال",
