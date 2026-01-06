@@ -420,7 +420,7 @@ export default function Home() {
                   controls={false}
                   aria-label={t.videoSection.ariaLabel}
                 >
-                  <source src="/assets/smartcare-video.mp4" type="video/mp4" />
+                  <source src="https://res.cloudinary.com/dqsok4hr5/video/upload/v1767464633/smartcare-video_hhoy77.mp4" type="video/mp4" />
                   {t.videoModal.fallback}
                 </video>
               </div>
