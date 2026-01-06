@@ -32,5 +32,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Assets folder
+/assets/
+/public/assets/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+
 
 
