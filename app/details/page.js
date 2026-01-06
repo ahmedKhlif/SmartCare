@@ -4,8 +4,14 @@ import { useEffect } from 'react'
 import Script from 'next/script'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLanguage } from '@/app/i18n/LanguageContext'
+import translations from '@/app/i18n/translations'
+import LanguageSelector from '@/app/components/LanguageSelector'
+import NavigationArrows from '@/app/components/NavigationArrows'
 
 export default function DetailsPage() {
+  const { language } = useLanguage()
+  const t = translations[language] || translations.en
   useEffect(() => {
     // Load all client-side scripts after component mounts
     if (typeof window !== 'undefined') {
@@ -92,6 +98,47 @@ export default function DetailsPage() {
           });
         });
       }
+
+      // Theme-based logo switching
+      const updateLogos = () => {
+        const theme = document.documentElement.getAttribute('data-theme')
+        const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        const logoImgs = document.querySelectorAll('.navbar__logo-img, .footer__logo-img')
+        
+        logoImgs.forEach(img => {
+          if (isDark) {
+            img.src = 'https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665292/log_light_wk2s6e.png'
+          } else {
+            img.src = 'https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png'
+          }
+        })
+      }
+
+      // Initial logo update
+      updateLogos()
+
+      // Listen for theme changes
+      const themeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme') {
+            updateLogos()
+          }
+        })
+      })
+
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+      })
+
+      // Listen for system theme changes
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      mediaQuery.addEventListener('change', updateLogos)
+
+      return () => {
+        themeObserver.disconnect()
+        mediaQuery.removeEventListener('change', updateLogos)
+      }
     }
   }, []);
 
@@ -106,46 +153,64 @@ export default function DetailsPage() {
       {/* Custom Cursor */}
       <div className="cursor" id="cursor"></div>
       <div className="cursor-dot" id="cursorDot"></div>
+
+      {/* Navigation Arrows */}
+      <NavigationArrows />
       
       {/* Navbar */}
-      <nav className="navbar" id="navbar">
+      <nav className="navbar details-navbar" id="navbar">
         <div className="container">
           <div className="navbar__content">
-            <Link href="/" className="navbar__logo">
-              <i className="fas fa-heartbeat"></i>
-              <span className="navbar__logo-text">SmartCare</span>
-            </Link>
+            <div className="navbar__left">
+              <Link href="/" className="navbar__back-button" title="Back to home">
+                <i className="fas fa-arrow-left"></i>
+                <span>{t.details.backButton}</span>
+              </Link>
+              <Link href="/" className="navbar__logo">
+                <img 
+                  src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png" 
+                  alt="SmartCare Logo" 
+                  className="navbar__logo-img"
+                  width="80"
+                  height="80"
+                />
+                <span className="navbar__logo-text">SmartCare</span>
+              </Link>
+            </div>
             
             <ul className="navbar__links">
-              <li><Link href="/#features" className="navbar__link">Fonctionnalités</Link></li>
-              <li><Link href="/#circular" className="navbar__link">Design Circulaire</Link></li>
-              <li><Link href="/#pricing" className="navbar__link">Tarifs</Link></li>
-              <li><Link href="/#impact" className="navbar__link">Impact</Link></li>
-              <li><Link href="/#faq" className="navbar__link">FAQ</Link></li>
-              <li><Link href="/#contact" className="navbar__link">Contact</Link></li>
+              <li><Link href="/#features" className="navbar__link">{t.navbar.features}</Link></li>
+              <li><Link href="/#circular" className="navbar__link">{t.navbar.circular}</Link></li>
+              <li><Link href="/#pricing" className="navbar__link">{t.navbar.pricing}</Link></li>
+              <li><Link href="/#impact" className="navbar__link">{t.navbar.impact}</Link></li>
+              <li><Link href="/#faq" className="navbar__link">{t.navbar.faq}</Link></li>
+              <li><Link href="/#contact" className="navbar__link">{t.navbar.contact}</Link></li>
             </ul>
             
             <div className="navbar__actions">
+              {/* Language Selector */}
+              <LanguageSelector />
+              
               {/* Theme Toggle */}
               <div className="theme-toggle" id="themeToggle">
-                <button className="theme-toggle__button" id="themeButton" aria-label="Changer le thème" title="Thème">
+                <button className="theme-toggle__button" id="themeButton" aria-label={t.navbar.changeTheme} title={t.navbar.changeTheme}>
                   <i className="fas fa-sun" id="themeIcon"></i>
                 </button>
                 <div className="theme-toggle__menu" id="themeMenu">
-                  <button className="theme-toggle__option" data-theme="light" aria-label="Mode clair">
-                    <i className="fas fa-sun"></i> <span>Clair</span>
+                  <button className="theme-toggle__option" data-theme="light" aria-label={t.navbar.lightMode}>
+                    <i className="fas fa-sun"></i> <span>{t.navbar.lightMode}</span>
                   </button>
-                  <button className="theme-toggle__option" data-theme="dark" aria-label="Mode sombre">
-                    <i className="fas fa-moon"></i> <span>Sombre</span>
+                  <button className="theme-toggle__option" data-theme="dark" aria-label={t.navbar.darkMode}>
+                    <i className="fas fa-moon"></i> <span>{t.navbar.darkMode}</span>
                   </button>
-                  <button className="theme-toggle__option" data-theme="auto" aria-label="Automatique">
-                    <i className="fas fa-adjust"></i> <span>Auto</span>
+                  <button className="theme-toggle__option" data-theme="auto" aria-label={t.navbar.autoMode}>
+                    <i className="fas fa-adjust"></i> <span>{t.navbar.autoMode}</span>
                   </button>
                 </div>
               </div>
               
               <Link href="/#contact" className="navbar__cta">
-                <i className="fas fa-calendar-alt"></i> <span>Demander une démo</span>
+                <i className="fas fa-calendar-alt"></i> <span>{t.navbar.demoRequest}</span>
               </Link>
             </div>
           </div>
@@ -157,10 +222,10 @@ export default function DetailsPage() {
         <div className="container">
           <div style={{maxWidth: '1200px', margin: '0 auto', textAlign: 'center'}}>
             <h1 className="section__title" style={{marginBottom: '16px'}}>
-              Modèle 3D Interactif
+              {language === 'fr' ? 'Modèle 3D Interactif' : language === 'ar' ? 'نموذج ثلاثي الأبعاد التفاعلي' : 'Interactive 3D Model'}
             </h1>
             <p className="section__subtitle" style={{marginBottom: '48px'}}>
-              Explorez le SmartCare Bracelet en détail. Faites glisser pour faire pivoter, utilisez la molette pour zoomer.
+              {language === 'fr' ? 'Explorez le SmartCare Bracelet en détail. Faites glisser pour faire pivoter, utilisez la molette pour zoomer.' : language === 'ar' ? 'استكشف سوار SmartCare بالتفصيل. اسحب للدوران، استخدم عجلة الماوس للتكبير.' : 'Explore the SmartCare Bracelet in detail. Drag to rotate, use the scroll wheel to zoom.'}
             </p>
             
             <div style={{position: 'relative', borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', marginBottom: '40px', background: 'linear-gradient(135deg, rgba(38, 166, 255, 0.05), rgba(47, 230, 200, 0.05))'}}>
@@ -204,17 +269,19 @@ export default function DetailsPage() {
                 
                 <div slot="poster" className="hero__3d-loading">
                   <div className="hero__3d-spinner"></div>
-                  <p>Chargement du modèle 3D...</p>
+                  <p>
+                    {language === 'fr' ? 'Chargement du modèle 3D...' : language === 'ar' ? 'جاري تحميل النموذج ثلاثي الأبعاد...' : 'Loading 3D model...'}
+                  </p>
                 </div>
               </model-viewer>
             </div>
             
             <div className="hero__3d-controls-info details-controls">
               <div>
-                <span><i className="fas fa-mouse"></i> Glissez pour tourner</span>
-                <span><i className="fas fa-search-plus"></i> Molette pour zoomer</span>
-                <span><i className="fas fa-redo"></i> R pour réinitialiser</span>
-                <span><i className="fas fa-play"></i> Espace pour auto-rotation</span>
+                <span><i className="fas fa-mouse"></i> {language === 'fr' ? 'Glissez pour tourner' : language === 'ar' ? 'اسحب للدوران' : 'Drag to rotate'}</span>
+                <span><i className="fas fa-search-plus"></i> {language === 'fr' ? 'Molette pour zoomer' : language === 'ar' ? 'عجلة الماوس للتكبير' : 'Scroll to zoom'}</span>
+                <span><i className="fas fa-redo"></i> {language === 'fr' ? 'R pour réinitialiser' : language === 'ar' ? 'R لإعادة تعيين' : 'R to reset'}</span>
+                <span><i className="fas fa-play"></i> {language === 'fr' ? 'Espace pour auto-rotation' : language === 'ar' ? 'مسافة للدوران التلقائي' : 'Space for auto-rotation'}</span>
               </div>
             </div>
           </div>
@@ -224,18 +291,21 @@ export default function DetailsPage() {
       {/* Product Details Section */}
       <section className="features details-section">
         <div className="container">
-          <h2 className="section__title">Détails du produit</h2>
-          <p className="section__subtitle">Design modulaire et technologie avancée</p>
+          <h2 className="section__title">
+            {language === 'fr' ? 'Détails du produit' : language === 'ar' ? 'تفاصيل المنتج' : 'Product Details'}
+          </h2>
+          <p className="section__subtitle">
+            {language === 'fr' ? 'Design modulaire et technologie avancée' : language === 'ar' ? 'تصميم معياري وتكنولوجيا متقدمة' : 'Modular design and advanced technology'}
+          </p>
           
           <div className="features__grid" style={{marginTop: '64px'}}>
             <div className="feature-card">
               <div className="feature-card__icon">
                 <i className="fas fa-microchip" style={{fontSize: '48px', color: 'var(--blue)'}}></i>
               </div>
-              <h3 className="feature-card__title">Cœur électronique détachable</h3>
+              <h3 className="feature-card__title">{t.details.detachableCore}</h3>
               <p className="feature-card__text">
-                Le module électronique peut être retiré et remplacé indépendamment du bracelet, 
-                permettant une mise à niveau sans remplacer l&apos;ensemble du dispositif.
+                {t.details.detachableCoreText}
               </p>
             </div>
             
@@ -243,10 +313,9 @@ export default function DetailsPage() {
               <div className="feature-card__icon">
                 <i className="fas fa-battery-three-quarters" style={{fontSize: '48px', color: 'var(--mint)'}}></i>
               </div>
-              <h3 className="feature-card__title">Batterie remplaçable</h3>
+              <h3 className="feature-card__title">{t.details.replaceableBattery}</h3>
               <p className="feature-card__text">
-                Batterie amovible standard, facilement remplaçable par l&apos;utilisateur. 
-                Prolonge la durée de vie du produit et réduit les déchets électroniques.
+                {t.details.replaceableBatteryText}
               </p>
             </div>
             
@@ -254,10 +323,9 @@ export default function DetailsPage() {
               <div className="feature-card__icon">
                 <i className="fas fa-link" style={{fontSize: '48px', color: 'var(--blue)'}}></i>
               </div>
-              <h3 className="feature-card__title">Bracelet interchangeable</h3>
+              <h3 className="feature-card__title">{t.details.interchangeableBracelet}</h3>
               <p className="feature-card__text">
-                Le bracelet en silicone médical peut être changé selon les préférences de l&apos;enfant 
-                ou remplacé en cas d&apos;usure, tout en conservant le module électronique.
+                {t.details.interchangeableBraceletText}
               </p>
             </div>
             
@@ -265,10 +333,9 @@ export default function DetailsPage() {
               <div className="feature-card__icon">
                 <i className="fas fa-shield-alt" style={{fontSize: '48px', color: 'var(--mint)'}}></i>
               </div>
-              <h3 className="feature-card__title">Silicone médical</h3>
+              <h3 className="feature-card__title">{t.details.medicalSilicone}</h3>
               <p className="feature-card__text">
-                Matériau hypoallergénique, résistant à l&apos;eau, conçu pour un port confortable 
-                24/7 par les enfants. Certifié pour contact cutané prolongé.
+                {t.details.medicalSiliconeText}
               </p>
             </div>
             
@@ -276,10 +343,9 @@ export default function DetailsPage() {
               <div className="feature-card__icon">
                 <i className="fas fa-satellite" style={{fontSize: '48px', color: 'var(--blue)'}}></i>
               </div>
-              <h3 className="feature-card__title">GPS intégré</h3>
+              <h3 className="feature-card__title">{t.details.integratedGPS}</h3>
               <p className="feature-card__text">
-                Géolocalisation précise avec alertes de zones sécurisées. Fonctionne même en intérieur 
-                grâce à la combinaison GPS + WiFi + Bluetooth.
+                {t.details.integratedGPSText}
               </p>
             </div>
             
@@ -287,10 +353,9 @@ export default function DetailsPage() {
               <div className="feature-card__icon">
                 <i className="fas fa-heartbeat" style={{fontSize: '48px', color: 'var(--mint)'}}></i>
               </div>
-              <h3 className="feature-card__title">Capteurs biométriques</h3>
+              <h3 className="feature-card__title">{t.details.biometricSensors}</h3>
               <p className="feature-card__text">
-                Surveillance continue de la fréquence cardiaque, des mouvements et des indicateurs 
-                de stress pour une détection précoce des situations préoccupantes.
+                {t.details.biometricSensorsText}
               </p>
             </div>
           </div>
@@ -302,47 +367,39 @@ export default function DetailsPage() {
         <div className="container">
           <div className="circular__content">
             <div className="circular__text">
-              <h2 className="section__title">Spécifications techniques</h2>
-              <p className="section__subtitle">Technologie de pointe au service de la santé</p>
+              <h2 className="section__title">{t.details.technicalSpecs}</h2>
+              <p className="section__subtitle">{t.details.technicalSpecsSubtitle}</p>
               
               <div className="details-specs-grid">
                 <div className="details-spec-item">
                   <i className="fas fa-microchip details-spec-icon"></i>
                   <div className="details-spec-content">
-                    <h4>Processeur</h4>
-                    <p>ARM Cortex-M4, optimisé pour faible consommation</p>
+                    <h4>{t.details.processor}</h4>
+                    <p>{t.details.processorText}</p>
                   </div>
                 </div>
                 
                 <div className="details-spec-item">
                   <i className="fas fa-battery-full details-spec-icon details-spec-icon--mint"></i>
                   <div className="details-spec-content">
-                    <h4>Autonomie</h4>
-                    <p>Jusqu&apos;à 7 jours d&apos;autonomie, charge rapide en 2 heures</p>
+                    <h4>{t.details.battery}</h4>
+                    <p>{t.details.batteryText}</p>
                   </div>
                 </div>
                 
                 <div className="details-spec-item">
                   <i className="fas fa-wifi details-spec-icon"></i>
                   <div className="details-spec-content">
-                    <h4>Connectivité</h4>
-                    <p>Bluetooth 5.0, WiFi, GPS, NFC pour paiement sans contact (optionnel)</p>
+                    <h4>{t.details.connectivity}</h4>
+                    <p>{t.details.connectivityText}</p>
                   </div>
                 </div>
                 
                 <div className="details-spec-item">
-                  <i className="fas fa-shield-alt details-spec-icon details-spec-icon--mint"></i>
+                  <i className="fas fa-tint details-spec-icon details-spec-icon--mint"></i>
                   <div className="details-spec-content">
-                    <h4>Sécurité</h4>
-                    <p>Chiffrement AES-256, authentification biométrique, conformité RGPD</p>
-                  </div>
-                </div>
-                
-                <div className="details-spec-item">
-                  <i className="fas fa-tint details-spec-icon"></i>
-                  <div className="details-spec-content">
-                    <h4>Résistance</h4>
-                    <p>IP68 (étanche jusqu&apos;à 1.5m), résistant aux chocs et à la poussière</p>
+                    <h4>{t.details.waterResistance}</h4>
+                    <p>{t.details.waterResistanceText}</p>
                   </div>
                 </div>
               </div>
@@ -366,19 +423,19 @@ export default function DetailsPage() {
       {/* Circular Economy Details */}
       <section className="impact details-section">
         <div className="container">
-          <h2 className="section__title">Économie circulaire intégrée</h2>
-          <p className="section__subtitle">Réduire les déchets électroniques, prolonger la durée de vie</p>
+          <h2 className="section__title">{t.details.circularDesign}</h2>
+          <p className="section__subtitle">{t.details.circularDesignSubtitle}</p>
           
           <div className="impact__points" style={{marginTop: '64px'}}>
             <div className="impact-point">
               <div className="impact-point__icon">
                 <i className="fas fa-recycle"></i>
               </div>
-              <h3 className="impact-point__title">Programme de reprise</h3>
+              <h3 className="impact-point__title">
+                {language === 'fr' ? 'Programme de reprise' : language === 'ar' ? 'برنامج الاستعادة' : 'Take-Back Program'}
+              </h3>
               <p className="impact-point__text">
-                Nous reprenons les anciens dispositifs SmartCare pour reconditionnement ou recyclage. 
-                Les composants réutilisables sont réintégrés dans de nouveaux produits, réduisant 
-                significativement les déchets électroniques.
+                {language === 'fr' ? 'Nous reprenons les anciens dispositifs SmartCare pour reconditionnement ou recyclage. Les composants réutilisables sont réintégrés dans de nouveaux produits, réduisant significativement les déchets électroniques.' : language === 'ar' ? 'نحن نسترجع أجهزة SmartCare القديمة للتكييف أو إعادة التدوير. يتم إعادة دمج المكونات القابلة لإعادة الاستخدام في منتجات جديدة، مما يقلل من النفايات الإلكترونية بشكل كبير.' : 'We take back old SmartCare devices for reconditioning or recycling. Reusable components are reintegrated into new products, significantly reducing electronic waste.'}
               </p>
             </div>
             
@@ -386,10 +443,9 @@ export default function DetailsPage() {
               <div className="impact-point__icon">
                 <i className="fas fa-tools"></i>
               </div>
-              <h3 className="impact-point__title">Réparation facilitée</h3>
+              <h3 className="impact-point__title">{t.details.repairGuides}</h3>
               <p className="impact-point__text">
-                Guides de réparation disponibles, pièces détachées accessibles, et réseau de 
-                réparateurs certifiés. Réparer plutôt que jeter, c&apos;est notre engagement.
+                {t.details.repairGuidesText}
               </p>
             </div>
             
@@ -397,11 +453,86 @@ export default function DetailsPage() {
               <div className="impact-point__icon">
                 <i className="fas fa-sync-alt"></i>
               </div>
-              <h3 className="impact-point__title">Mises à jour logicielles</h3>
+              <h3 className="impact-point__title">{t.details.softwareUpdates}</h3>
               <p className="impact-point__text">
-                Les mises à jour OTA (Over-The-Air) permettent d&apos;améliorer les fonctionnalités 
-                sans changer le matériel. Votre SmartCare évolue avec vous.
+                {t.details.softwareUpdatesText}
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cloudinary Video Section */}
+      <section className="details-section video-showcase" style={{background: 'linear-gradient(135deg, rgba(38, 166, 255, 0.08) 0%, rgba(47, 230, 200, 0.08) 100%)'}}>
+        <div className="container">
+          <h2 className="section__title">{t.details.videoTitle}</h2>
+          <p className="section__subtitle">{t.details.videoSubtitle}</p>
+          
+          <div style={{marginTop: '64px', borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)'}}>
+            <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden'}}>
+              <iframe
+                style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none'}}
+                src="https://player.cloudinary.com/embed/?cloud_name=dqsok4hr5&public_id=Peace_of_mind_intro_video_tkpjwr&profile=cld-default"
+                title="SmartCare Product Demo Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Product Insights Section with Cloudinary Image */}
+      <section className="details-section product-insights">
+        <div className="container">
+          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center'}}>
+            <div>
+              <h2 className="section__title">{t.details.insideTitleSection}</h2>
+              <p className="section__subtitle" style={{marginBottom: '32px'}}>{t.details.insideSubtitleSection}</p>
+              
+              <ul style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+                <li style={{display: 'flex', gap: '16px'}}>
+                  <i className="fas fa-check-circle" style={{color: 'var(--mint)', fontSize: '24px', flexShrink: 0, marginTop: '2px'}}></i>
+                  <div>
+                    <h4 style={{color: 'var(--text)', fontWeight: '600', marginBottom: '4px'}}>{t.details.electronics}</h4>
+                    <p style={{color: 'var(--muted)'}}>{t.details.electronicsText}</p>
+                  </div>
+                </li>
+                
+                <li style={{display: 'flex', gap: '16px'}}>
+                  <i className="fas fa-check-circle" style={{color: 'var(--blue)', fontSize: '24px', flexShrink: 0, marginTop: '2px'}}></i>
+                  <div>
+                    <h4 style={{color: 'var(--text)', fontWeight: '600', marginBottom: '4px'}}>{t.details.materials}</h4>
+                    <p style={{color: 'var(--muted)'}}>{t.details.materialsText}</p>
+                  </div>
+                </li>
+                
+                <li style={{display: 'flex', gap: '16px'}}>
+                  <i className="fas fa-check-circle" style={{color: 'var(--mint)', fontSize: '24px', flexShrink: 0, marginTop: '2px'}}></i>
+                  <div>
+                    <h4 style={{color: 'var(--text)', fontWeight: '600', marginBottom: '4px'}}>{t.details.modularity}</h4>
+                    <p style={{color: 'var(--muted)'}}>{t.details.modularityText}</p>
+                  </div>
+                </li>
+                
+                <li style={{display: 'flex', gap: '16px'}}>
+                  <i className="fas fa-check-circle" style={{color: 'var(--blue)', fontSize: '24px', flexShrink: 0, marginTop: '2px'}}></i>
+                  <div>
+                    <h4 style={{color: 'var(--text)', fontWeight: '600', marginBottom: '4px'}}>{t.details.sensors}</h4>
+                    <p style={{color: 'var(--muted)'}}>{t.details.sensorsText}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+            <div style={{borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', height: '500px'}}>
+              <img 
+                src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767657858/inside_bracelt_3d_jg5pq7.jpg"
+                alt="SmartCare Bracelet Interior - High quality component view"
+                style={{width: '100%', height: '100%', objectFit: 'cover', transition: 'var(--transition)'}}
+                onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+              />
             </div>
           </div>
         </div>
@@ -422,47 +553,51 @@ export default function DetailsPage() {
           <div className="footer__content">
             <div className="footer__brand">
               <h3 className="footer__logo">
-                <i className="fas fa-heartbeat"></i> SmartCare
+                <img 
+                  src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png" 
+                  alt="SmartCare Logo" 
+                  className="footer__logo-img"
+                  width="32"
+                  height="32"
+                />
+                <span>SmartCare</span>
               </h3>
-              <p className="footer__tagline">Dispositif médical intelligent pour enfants</p>
+              <p className="footer__tagline">{t.footerContent.tagline}</p>
             </div>
             
             <div className="footer__links">
               <div className="footer__column">
-                <h4 className="footer__title">Produit</h4>
+                <h4 className="footer__title">{t.footerContent.productTitle}</h4>
                 <ul>
-                  <li><Link href="/#features">Fonctionnalités</Link></li>
-                  <li><Link href="/#circular">Design circulaire</Link></li>
-                  <li><Link href="/#pricing">Tarifs</Link></li>
+                  <li><Link href="/#features">{t.footerContent.links.features}</Link></li>
+                  <li><Link href="/#circular">{t.footerContent.links.circular}</Link></li>
+                  <li><Link href="/#pricing">{t.footerContent.links.pricing}</Link></li>
                 </ul>
               </div>
               
               <div className="footer__column">
-                <h4 className="footer__title">Ressources</h4>
+                <h4 className="footer__title">{t.footerContent.resourcesTitle}</h4>
                 <ul>
-                  <li><Link href="/#impact">Impact</Link></li>
-                  <li><Link href="/#faq">FAQ</Link></li>
-                  <li><Link href="/#contact">Contact</Link></li>
+                  <li><Link href="/#impact">{t.footerContent.links.impact}</Link></li>
+                  <li><Link href="/#faq">{t.footerContent.links.faq}</Link></li>
+                  <li><Link href="/#contact">{t.footerContent.links.contact}</Link></li>
                 </ul>
               </div>
               
               <div className="footer__column">
-                <h4 className="footer__title">Social</h4>
+                <h4 className="footer__title">{t.footerContent.socialTitle}</h4>
                 <ul className="footer__social">
-                  <li><a href="#" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i> LinkedIn</a></li>
-                  <li><a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i> Twitter</a></li>
-                  <li><a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i> Facebook</a></li>
+                  <li><a href="#" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i> {t.footerContent.links.linkedin}</a></li>
+                  <li><a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i> {t.footerContent.links.twitter}</a></li>
+                  <li><a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i> {t.footerContent.links.facebook}</a></li>
                 </ul>
               </div>
             </div>
           </div>
           
           <div className="footer__bottom">
-            <p className="footer__disclaimer">
-              SmartCare est un dispositif médical en développement. Les informations présentées sont 
-              à titre informatif et peuvent être sujettes à modification.
-            </p>
-            <p className="footer__copyright">&copy; 2024 SmartCare. Tous droits réservés.</p>
+            <p className="footer__disclaimer">{t.footerContent.disclaimer}</p>
+            <p className="footer__copyright">{t.footerContent.rights}</p>
           </div>
         </div>
       </footer>

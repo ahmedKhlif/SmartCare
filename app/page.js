@@ -1,92 +1,344 @@
-'use client'
+"use client"
 
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
-import Script from 'next/script'
+import { useLanguage } from '@/app/i18n/LanguageContext'
+import translations from '@/app/i18n/translations'
+import LanguageSelector from '@/app/components/LanguageSelector'
+import NavigationArrows from '@/app/components/NavigationArrows'
+
+const featureIconMap = {
+  monitoring: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#26a6ff" strokeWidth="2" fill="none" />
+      <path d="M24 12V24L32 28" stroke="#26a6ff" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  ),
+  gps: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="18" stroke="#2fe6c8" strokeWidth="2" fill="none" />
+      <circle cx="24" cy="24" r="4" fill="#2fe6c8" />
+      <path d="M24 6L24 2M24 46L24 42M6 24L2 24M46 24L42 24" stroke="#2fe6c8" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  ),
+  calm: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 8C16.27 8 10 14.27 10 22C10 29.73 24 40 24 40C24 40 38 29.73 38 22C38 14.27 31.73 8 24 8Z" stroke="#26a6ff" strokeWidth="2" fill="none" />
+      <circle cx="24" cy="22" r="6" stroke="#26a6ff" strokeWidth="2" fill="none" />
+    </svg>
+  ),
+  family: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="12" width="32" height="24" rx="2" stroke="#2fe6c8" strokeWidth="2" fill="none" />
+      <path d="M16 20L22 26L32 16" stroke="#2fe6c8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+const howIcons = [
+  (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="12" width="24" height="16" rx="2" stroke="#26a6ff" strokeWidth="2" fill="none" />
+      <circle cx="20" cy="20" r="4" fill="#26a6ff" />
+    </svg>
+  ),
+  (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="4" width="28" height="32" rx="3" stroke="#2fe6c8" strokeWidth="2" fill="none" />
+      <rect x="12" y="8" width="16" height="10" rx="1" fill="#2fe6c8" fillOpacity="0.2" />
+    </svg>
+  ),
+  (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 8L28 16H24V28H16V16H12L20 8Z" fill="#26a6ff" />
+      <ellipse cx="20" cy="32" rx="8" ry="4" fill="#26a6ff" fillOpacity="0.3" />
+    </svg>
+  ),
+  (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="12" stroke="#2fe6c8" strokeWidth="2" fill="none" />
+      <path d="M20 12V20L26 24" stroke="#2fe6c8" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+]
 
 export default function Home() {
+  const { language } = useLanguage()
+  const t = translations[language] || translations.en
+
   useEffect(() => {
-    // Load all client-side scripts after component mounts
-    if (typeof window !== 'undefined') {
-      // Check if script is already loaded
-      if (document.querySelector('script[src="/script.js"]')) {
-        return
-      }
+    if (typeof window === 'undefined') return
+
+    // Initialize custom cursor directly
+    const cursor = document.getElementById('cursor')
+    const cursorDot = document.getElementById('cursorDot')
+    
+    if (window.innerWidth >= 1024 && cursor && cursorDot) {
+      document.body.classList.add('has-custom-cursor')
       
-      // Wait a bit for DOM to be ready
-      setTimeout(() => {
-        const script = document.createElement('script')
-        script.src = '/script.js'
-        script.async = true
-        script.onload = () => {
-          console.log('Scripts loaded successfully')
-        }
-        document.body.appendChild(script)
-        
-        return () => {
-          if (document.body.contains(script)) {
-            document.body.removeChild(script)
+      let mouseX = window.innerWidth / 2
+      let mouseY = window.innerHeight / 2
+      let cursorX = mouseX
+      let cursorY = mouseY
+      let dotX = mouseX
+      let dotY = mouseY
+
+      // Initialize cursor position
+      cursor.style.left = cursorX + 'px'
+      cursor.style.top = cursorY + 'px'
+      cursorDot.style.left = dotX + 'px'
+      cursorDot.style.top = dotY + 'px'
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX
+        mouseY = e.clientY
+      })
+
+      // Smooth cursor animation
+      const animateCursor = () => {
+        cursorX += (mouseX - cursorX) * 0.1
+        cursorY += (mouseY - cursorY) * 0.1
+        cursor.style.left = cursorX + 'px'
+        cursor.style.top = cursorY + 'px'
+
+        dotX += (mouseX - dotX) * 0.3
+        dotY += (mouseY - dotY) * 0.3
+        cursorDot.style.left = dotX + 'px'
+        cursorDot.style.top = dotY + 'px'
+
+        requestAnimationFrame(animateCursor)
+      }
+      animateCursor()
+
+      // Hover effects
+      const hoverElements = document.querySelectorAll('a, button, .btn')
+      hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.classList.add('hover')
+          cursorDot.classList.add('hover')
+        })
+        el.addEventListener('mouseleave', () => {
+          cursor.classList.remove('hover')
+          cursorDot.classList.remove('hover')
+        })
+      })
+    }
+
+    if (document.querySelector('script[src="/script.js"]')) return
+
+    const timer = setTimeout(() => {
+      const script = document.createElement('script')
+      script.src = '/script.js'
+      script.async = true
+      script.onload = () => {
+        console.log('Scripts loaded successfully')
+      }
+      document.body.appendChild(script)
+    }, 100)
+
+    // Intersection Observer for video performance optimization
+    const videoElement = document.getElementById('productVideo')
+    let videoObserver = null
+    if (videoElement) {
+      videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            videoElement.play().catch(() => {
+              // Autoplay may be blocked, that's okay
+            })
+          } else {
+            videoElement.pause()
           }
+        })
+      }, {
+        threshold: 0.25 // Play when 25% of video is visible
+      })
+      videoObserver.observe(videoElement)
+    }
+
+    // Theme-based logo switching
+    const updateLogos = () => {
+      const theme = document.documentElement.getAttribute('data-theme')
+      const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      const logoImgs = document.querySelectorAll('.navbar__logo-img, .footer__logo-img')
+      
+      logoImgs.forEach(img => {
+        if (isDark) {
+          img.src = 'https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png'
+        } else {
+          img.src = 'https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665292/log_light_wk2s6e.png'
         }
-      }, 100)
+      })
+    }
+
+    // Initial logo update
+    updateLogos()
+
+    // Listen for theme changes
+    const themeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-theme') {
+          updateLogos()
+        }
+      })
+    })
+
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    })
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    mediaQuery.addEventListener('change', updateLogos)
+
+    return () => {
+      if (videoObserver) videoObserver.disconnect()
+      themeObserver.disconnect()
+      mediaQuery.removeEventListener('change', updateLogos)
+      clearTimeout(timer)
     }
   }, [])
+
+  const navLinks = [
+    { href: '#project', label: t.navbar.project, section: 'project' },
+    { href: '#features', label: t.navbar.features, section: 'features' },
+    { href: '#circular', label: t.navbar.circular, section: 'circular' },
+    { href: '#pricing', label: t.navbar.pricing, section: 'pricing' },
+    { href: '#impact', label: t.navbar.impact, section: 'impact' },
+    { href: '#faq', label: t.navbar.faq, section: 'faq' },
+    { href: '#contact', label: t.navbar.contact, section: 'contact' }
+  ]
+
+  const pricingPlans = [
+    {
+      key: 'starter',
+      priceMonthly: '950',
+      priceYearly: '760',
+      currency: t.pricingSection.currency,
+      period: t.pricingSection.perMonth,
+      icon: 'fas fa-mobile-alt',
+      ctaIcon: 'fas fa-shopping-cart'
+    },
+    {
+      key: 'professional',
+      priceMonthly: '1590',
+      priceYearly: '1270',
+      currency: t.pricingSection.currency,
+      period: t.pricingSection.perMonth,
+      icon: 'fas fa-mobile-alt',
+      featured: true,
+      badgeIcon: 'fas fa-star',
+      ctaIcon: 'fas fa-rocket'
+    },
+    {
+      key: 'enterprise',
+      priceMonthly: '3190',
+      priceYearly: '2550',
+      currency: t.pricingSection.currency,
+      period: t.pricingSection.perMonth,
+      icon: 'fas fa-mobile-alt',
+      ctaIcon: 'fas fa-phone'
+    }
+  ]
+
+  const pricingInfoItems = [
+    {
+      icon: 'fas fa-shield-alt',
+      title: t.pricingSection.info.warranty.title,
+      text: t.pricingSection.info.warranty.text
+    },
+    {
+      icon: 'fas fa-sync-alt',
+      title: t.pricingSection.info.cancel.title,
+      text: t.pricingSection.info.cancel.text
+    },
+    {
+      icon: 'fas fa-headset',
+      title: t.pricingSection.info.support.title,
+      text: t.pricingSection.info.support.text
+    }
+  ]
+
+  const pricingFaq = t.pricingSection.faq || []
+  const impactPoints = (t.impactSection.points || []).map((point, index) => ({
+    ...point,
+    icon: ['fas fa-heart', 'fas fa-star', 'fas fa-hands-helping'][index] || 'fas fa-check'
+  }))
+  const faqItems = t.faqSection.items || []
+
+  const contactRoles = [
+    { value: '', label: t.contactSection.rolePlaceholder },
+    { value: 'parent', label: t.contactSection.roles.parent },
+    { value: 'educator', label: t.contactSection.roles.educator },
+    { value: 'doctor', label: t.contactSection.roles.doctor },
+    { value: 'investor', label: t.contactSection.roles.investor }
+  ]
+
+  const circularCards = t.circularSection.cards || []
+  const features = t.featuresSection.items || []
+  const howSteps = t.howItWorks.steps || []
+  const heroBadges = t.heroBadges || []
+
   return (
     <>
-      {/* Scroll Progress Bar */}
       <div className="scroll-progress" id="scrollProgress"></div>
-      
-      {/* Custom Cursor */}
+
       <div className="cursor" id="cursor"></div>
       <div className="cursor-dot" id="cursorDot"></div>
-      
-      {/* Particles Background */}
+
       <div className="particles" id="particles"></div>
-      
-      {/* Sticky Navbar */}
-      <nav className="navbar" id="navbar" role="navigation" aria-label="Navigation principale">
+
+      <nav className="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div className="container">
           <div className="navbar__content">
-            <a href="#hero" className="navbar__logo" aria-label="SmartCare - Retour à l'accueil">
-              <i className="fas fa-heartbeat"></i>
+            <a href="#hero" className="navbar__logo" aria-label="SmartCare - Home">
+              <img 
+                src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png" 
+                alt="SmartCare Logo" 
+                className="navbar__logo-img"
+                width="80"
+                height="80"
+              />
               <span className="navbar__logo-text">SmartCare</span>
             </a>
-            
+
             <ul className="navbar__links" id="navbarLinks">
-              <li><a href="#project" className="navbar__link" data-section="project">Le Projet</a></li>
-              <li><a href="#features" className="navbar__link" data-section="features">Fonctionnalités</a></li>
-              <li><a href="#circular" className="navbar__link" data-section="circular">Design Circulaire</a></li>
-              <li><a href="#pricing" className="navbar__link" data-section="pricing">Tarifs</a></li>
-              <li><a href="#impact" className="navbar__link" data-section="impact">Impact</a></li>
-              <li><a href="#faq" className="navbar__link" data-section="faq">FAQ</a></li>
-              <li><a href="#contact" className="navbar__link" data-section="contact">Contact</a></li>
+              {navLinks.map(link => (
+                <li key={link.section}>
+                  <a href={link.href} className="navbar__link" data-section={link.section}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
-            
+
             <div className="navbar__actions">
-              {/* Theme Toggle */}
               <div className="theme-toggle" id="themeToggle">
-                <button className="theme-toggle__button" id="themeButton" aria-label="Changer le thème" title="Thème">
+                <button className="theme-toggle__button" id="themeButton" aria-label={t.navbar.changeTheme} title="Theme">
                   <i className="fas fa-sun" id="themeIcon"></i>
                 </button>
                 <div className="theme-toggle__menu" id="themeMenu">
-                  <button className="theme-toggle__option" data-theme="light" aria-label="Mode clair">
-                    <i className="fas fa-sun"></i> <span>Clair</span>
+                  <button className="theme-toggle__option" data-theme="light" aria-label={t.navbar.lightMode}>
+                    <i className="fas fa-sun"></i> <span>{t.navbar.lightMode}</span>
                   </button>
-                  <button className="theme-toggle__option" data-theme="dark" aria-label="Mode sombre">
-                    <i className="fas fa-moon"></i> <span>Sombre</span>
+                  <button className="theme-toggle__option" data-theme="dark" aria-label={t.navbar.darkMode}>
+                    <i className="fas fa-moon"></i> <span>{t.navbar.darkMode}</span>
                   </button>
-                  <button className="theme-toggle__option" data-theme="auto" aria-label="Automatique">
-                    <i className="fas fa-adjust"></i> <span>Auto</span>
+                  <button className="theme-toggle__option" data-theme="auto" aria-label={t.navbar.autoMode}>
+                    <i className="fas fa-adjust"></i> <span>{t.navbar.autoMode}</span>
                   </button>
                 </div>
               </div>
-              
-              <button className="navbar__cta" aria-label="Demander une démo">
-                <i className="fas fa-calendar-alt"></i> <span>Demander une démo</span>
+
+              <LanguageSelector />
+
+              <button className="navbar__cta" aria-label={t.navbar.demoRequest}>
+                <i className="fas fa-calendar-alt"></i> <span>{t.navbar.demoRequest}</span>
               </button>
             </div>
-            
-            <button className="navbar__toggle" id="navbarToggle" aria-label="Menu mobile" aria-expanded="false">
+
+            <button className="navbar__toggle" id="navbarToggle" aria-label="Menu" aria-expanded="false">
               <span></span>
               <span></span>
               <span></span>
@@ -95,154 +347,129 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="hero" id="hero">
         <div className="hero__bg-blobs">
           <div className="hero__blob hero__blob--1"></div>
           <div className="hero__blob hero__blob--2"></div>
         </div>
-        
+
         <div className="container">
           <div className="hero__content">
             <div className="hero__text">
-              <h1 className="hero__title">SmartCare Bracelet</h1>
-              <p className="hero__subtitle">
-                Un dispositif médical intelligent qui améliore l'autonomie, la sécurité et le calme des enfants avec Trisomie 21.
-              </p>
+              <h1 className="hero__title">{t.hero.title}</h1>
+              <p className="hero__subtitle">{t.hero.subtitle}</p>
               <div className="hero__ctas">
-                <button 
-                  className="btn btn--primary" 
-                  onClick={() => document.getElementById('features')?.scrollIntoView({behavior: 'smooth'})} 
-                  aria-label="Explorer les fonctionnalités"
+                <button
+                  className="btn btn--primary"
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                  aria-label={t.hero.exploreFeatures}
                 >
-                  <i className="fas fa-arrow-down"></i> Explorer les fonctionnalités
+                  <i className="fas fa-arrow-down"></i> {t.hero.exploreFeatures}
                 </button>
-                <button className="btn btn--secondary" id="watchDemoBtn" aria-label="Regarder la démo vidéo">
-                  <i className="fas fa-play-circle"></i> Regarder la démo
+                <button className="btn btn--secondary" id="watchDemoBtn" aria-label={t.hero.watchDemo}>
+                  <i className="fas fa-play-circle"></i> {t.hero.watchDemo}
                 </button>
               </div>
             </div>
-            
+
             <div className="hero__image-wrapper">
               <div className="hero__image-container">
-                {/* 3D Image - Link to details page */}
-                <a href="/details" className="hero__3d-link" style={{display: 'block', position: 'relative'}}>
-                  <Image 
-                    src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767464631/bracelet-3d_qzzrru.png" 
-                    alt="SmartCare Bracelet - Cliquez pour voir le modèle 3D interactif" 
+                <a href="/details" className="hero__3d-link" style={{ display: 'block', position: 'relative' }}>
+                  <Image
+                    src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767464631/bracelet-3d_qzzrru.png"
+                    alt={t.hero.view3D}
                     className="hero__image"
                     width={500}
                     height={500}
                     priority
                   />
                   <div className="hero__3d-badge">
-                    <i className="fas fa-cube"></i> Voir en 3D
+                    <i className="fas fa-cube"></i> {t.hero.view3D}
                   </div>
                 </a>
               </div>
             </div>
           </div>
-          
+
           <div className="hero__badges">
-            <div className="hero__badge">
-              <i className="fas fa-network-wired hero__badge-icon"></i>
-              <span className="hero__badge-text">IoT + IA</span>
-            </div>
-            <div className="hero__badge">
-              <i className="fas fa-bolt hero__badge-icon"></i>
-              <span className="hero__badge-text">Sécurité en temps réel</span>
-            </div>
-            <div className="hero__badge">
-              <i className="fas fa-recycle hero__badge-icon"></i>
-              <span className="hero__badge-text">Design circulaire</span>
-            </div>
+            {heroBadges.map((badge, index) => (
+              <div className="hero__badge" key={index}>
+                <i className={`${badge.icon} hero__badge-icon`}></i>
+                <span className="hero__badge-text">{badge.text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Product Demo Video Section */}
+      <NavigationArrows />
+
       <section className="video-section" id="videoSection">
         <div className="container">
           <div className="video-section__content">
-            <h2 className="section__title">Découvrez SmartCare en action</h2>
             <div className="video-card">
               <div className="video-card__wrapper" id="videoWrapper">
-                <video 
-                  className="video-card__video" 
-                  id="productVideo" 
-                  preload="auto" 
+                <video
+                  className="video-card__video"
+                  id="productVideo"
+                  preload="auto"
                   playsInline
                   webkit-playsinline="true"
-                  muted={false}
+                  muted
+                  loop
                   controls={false}
-                  aria-label="Démo produit SmartCare"
+                  aria-label={t.videoSection.ariaLabel}
                 >
                   <source src="/assets/smartcare-video.mp4" type="video/mp4" />
-                  Votre navigateur ne supporte pas la lecture vidéo.
+                  {t.videoModal.fallback}
                 </video>
-                <button 
-                  className="video-card__play" 
-                  id="videoPlayBtn" 
-                  type="button"
-                  aria-label="Lire la vidéo"
-                  style={{zIndex: 10, cursor: 'pointer'}}
-                >
-                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="32" cy="32" r="32" fill="white" fillOpacity="0.9"/>
-                    <path d="M26 20L44 32L26 44V20Z" fill="#26a6ff"/>
-                  </svg>
-                </button>
               </div>
-              <p className="video-card__caption">Démo concept produit (10–20s)</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Project Overview Section */}
-      <section className="impact fade-in" id="project" style={{padding: '100px 0', background: 'linear-gradient(135deg, rgba(38, 166, 255, 0.03), rgba(47, 230, 200, 0.03))'}}>
+      <section
+        className="impact fade-in"
+        id="project"
+        style={{ padding: '100px 0', background: 'linear-gradient(135deg, rgba(38, 166, 255, 0.03), rgba(47, 230, 200, 0.03))' }}
+      >
         <div className="container">
-          <h2 className="section__title">Le projet SmartCare</h2>
-          <p className="section__subtitle">Innovation technologique, impact social et économie circulaire</p>
-          
-          <div style={{maxWidth: '900px', margin: '0 auto', marginTop: '64px'}}>
+          <h2 className="section__title">SmartCare</h2>
+          <p className="section__subtitle">{t.project.subtitle}</p>
+
+          <div style={{ maxWidth: '900px', margin: '0 auto', marginTop: '64px' }}>
             <div className="project-card">
               <div className="project-card__header">
-                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, var(--blue), var(--mint))'}}>
+                <div className="project-card__icon" style={{ background: 'linear-gradient(135deg, var(--blue), var(--mint))' }}>
                   <i className="fas fa-lightbulb"></i>
                 </div>
                 <div>
-                  <h3 className="project-card__title">Idée centrale</h3>
-                  <p className="project-card__text">
-                    SmartCare est un dispositif médical intelligent conçu spécifiquement pour les enfants 
-                    avec Trisomie 21. Ce n&apos;est pas simplement un gadget, mais un écosystème complet 
-                    qui améliore la <strong>sécurité</strong>, l&apos;<strong>autonomie</strong> et la 
-                    <strong>régulation émotionnelle</strong>, tout en offrant une tranquillité d&apos;esprit 
-                    aux familles et aux éducateurs.
-                  </p>
+                  <h3 className="project-card__title">{t.project.centralIdea}</h3>
+                  <p className="project-card__text">{t.project.centralIdeaText}</p>
                 </div>
               </div>
             </div>
 
             <div className="project-card">
               <div className="project-card__header">
-                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, #ef4444, #f59e0b)'}}>
+                <div className="project-card__icon" style={{ background: 'linear-gradient(135deg, #ef4444, #f59e0b)' }}>
                   <i className="fas fa-exclamation-triangle"></i>
                 </div>
                 <div>
-                  <h3 className="project-card__title">Problème résolu</h3>
-                  <p className="project-card__text" style={{marginBottom: '20px'}}>
-                    Les enfants avec Trisomie 21 font face à des défis quotidiens :
+                  <h3 className="project-card__title">{t.project.problemSolved}</h3>
+                  <p className="project-card__text" style={{ marginBottom: '20px' }}>
+                    {t.project.problemSolvedText}
                   </p>
                   <ul className="project-card__list">
-                    <li><i className="fas fa-check-circle"></i> Difficulté à exprimer le stress ou l&apos;inconfort</li>
-                    <li><i className="fas fa-check-circle"></i> Risque de se perdre ou de se désorienter</li>
-                    <li><i className="fas fa-check-circle"></i> Besoin de supervision constante</li>
-                    <li><i className="fas fa-check-circle"></i> Épisodes d&apos;anxiété et comportements impulsifs</li>
-                    <li><i className="fas fa-check-circle"></i> Communication fragmentée entre parents, éducateurs et médecins</li>
+                    {t.project.challenges.map((challenge, idx) => (
+                      <li key={idx}>
+                        <i className="fas fa-check-circle"></i> {challenge}
+                      </li>
+                    ))}
                   </ul>
-                  <p className="project-card__text" style={{marginTop: '20px', fontStyle: 'italic'}}>
-                    Les solutions existantes sont des trackers de fitness génériques, non adaptés à leurs besoins spécifiques.
+                  <p className="project-card__text" style={{ marginTop: '20px', fontStyle: 'italic' }}>
+                    {t.project.existingSolutions}
                   </p>
                 </div>
               </div>
@@ -250,44 +477,34 @@ export default function Home() {
 
             <div className="project-card">
               <div className="project-card__header">
-                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, var(--mint), var(--blue))'}}>
+                <div className="project-card__icon" style={{ background: 'linear-gradient(135deg, var(--mint), var(--blue))' }}>
                   <i className="fas fa-cogs"></i>
                 </div>
                 <div>
-                  <h3 className="project-card__title">Notre solution : un écosystème complet</h3>
+                  <h3 className="project-card__title">{t.project.solution}</h3>
                   <div className="project-solution-grid">
                     <div className="project-solution-item">
                       <h4 className="project-solution-item__title">
-                        <i className="fas fa-bracelet" style={{color: 'var(--blue)'}}></i>
-                        Bracelet intelligent
+                        <i className="fas fa-bracelet" style={{ color: 'var(--blue)' }}></i>
+                        {t.project.smartBracelet}
                       </h4>
-                      <p className="project-solution-item__text">
-                        Silicone médical adapté aux enfants, design arrondi et sécurisé. Capteurs de fréquence cardiaque, 
-                        mouvement, indicateurs de stress, GPS, et retour audio/vibration pour apaiser l&apos;enfant. 
-                        <strong> Design modulaire</strong> : cœur électronique détachable.
-                      </p>
+                      <p className="project-solution-item__text">{t.project.smartBraceletText}</p>
                     </div>
-                    
+
                     <div className="project-solution-item project-solution-item--mint">
                       <h4 className="project-solution-item__title">
-                        <i className="fas fa-mobile-alt" style={{color: 'var(--mint)'}}></i>
-                        Application mobile
+                        <i className="fas fa-mobile-alt" style={{ color: 'var(--mint)' }}></i>
+                        {t.project.mobileApp}
                       </h4>
-                      <p className="project-solution-item__text">
-                        Surveillance en temps réel, alertes et notifications, historique de santé et d&apos;activité, 
-                        recommandations personnalisées. Accès sécurisé pour parents et éducateurs.
-                      </p>
+                      <p className="project-solution-item__text">{t.project.mobileAppText}</p>
                     </div>
-                    
+
                     <div className="project-solution-item">
                       <h4 className="project-solution-item__title">
-                        <i className="fas fa-cloud" style={{color: 'var(--blue)'}}></i>
-                        Plateforme cloud
+                        <i className="fas fa-cloud" style={{ color: 'var(--blue)' }}></i>
+                        {t.project.cloudPlatform}
                       </h4>
-                      <p className="project-solution-item__text">
-                        Analyse de données, rapports détaillés, accès multi-rôles (famille / école / médical), 
-                        détection assistée par IA des patterns comportementaux.
-                      </p>
+                      <p className="project-solution-item__text">{t.project.cloudPlatformText}</p>
                     </div>
                   </div>
                 </div>
@@ -296,39 +513,38 @@ export default function Home() {
 
             <div className="project-card">
               <div className="project-card__header">
-                <div className="project-card__icon" style={{background: 'linear-gradient(135deg, #10b981, #059669)'}}>
+                <div className="project-card__icon" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
                   <i className="fas fa-recycle"></i>
                 </div>
                 <div>
-                  <h3 className="project-card__title">Économie circulaire intégrée</h3>
-                  <p className="project-card__text" style={{marginBottom: '24px'}}>
-                    SmartCare est conçu selon les principes de l&apos;économie circulaire, pas linéaire :
+                  <h3 className="project-card__title">{t.project.circularEconomy}</h3>
+                  <p className="project-card__text" style={{ marginBottom: '24px' }}>
+                    {t.project.circularEconomyText}
                   </p>
                   <div className="project-circular-grid">
                     <div className="project-circular-item">
                       <i className="fas fa-redo-alt"></i>
-                      <h4 className="project-circular-item__title">Réutilisation</h4>
-                      <p className="project-circular-item__text">Même module pour plusieurs utilisateurs</p>
+                      <h4 className="project-circular-item__title">{t.project.reuse}</h4>
+                      <p className="project-circular-item__text">{t.project.reuseText}</p>
                     </div>
                     <div className="project-circular-item project-circular-item--mint">
                       <i className="fas fa-tools"></i>
-                      <h4 className="project-circular-item__title">Réparation</h4>
-                      <p className="project-circular-item__text">Remplacer une partie, pas tout</p>
+                      <h4 className="project-circular-item__title">{t.project.repair}</h4>
+                      <p className="project-circular-item__text">{t.project.repairText}</p>
                     </div>
                     <div className="project-circular-item">
                       <i className="fas fa-sync-alt"></i>
-                      <h4 className="project-circular-item__title">Reconditionnement</h4>
-                      <p className="project-circular-item__text">Programme de reprise</p>
+                      <h4 className="project-circular-item__title">{t.project.refurbish}</h4>
+                      <p className="project-circular-item__text">{t.project.refurbishText}</p>
                     </div>
                     <div className="project-circular-item project-circular-item--mint">
                       <i className="fas fa-recycle"></i>
-                      <h4 className="project-circular-item__title">Recyclage</h4>
-                      <p className="project-circular-item__text">Matériaux + électronique</p>
+                      <h4 className="project-circular-item__title">{t.project.recycle}</h4>
+                      <p className="project-circular-item__text">{t.project.recycleText}</p>
                     </div>
                   </div>
                   <p className="project-highlight">
-                    <strong>Résultat :</strong> Réduction directe des déchets électroniques (e-waste) et alignement 
-                    avec les objectifs de durabilité et d&apos;économie circulaire de la Tunisie.
+                    <strong>SmartCare:</strong> {t.project.sustainabilityGoals}
                   </p>
                 </div>
               </div>
@@ -337,174 +553,69 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="features fade-in" id="features">
         <div className="container">
-          <h2 className="section__title">Fonctionnalités principales</h2>
-          <p className="section__subtitle">Technologie avancée au service de l'autonomie et de la sécurité</p>
-          
+          <h2 className="section__title">{t.featuresSection.title}</h2>
+          <p className="section__subtitle">{t.featuresSection.subtitle}</p>
+
           <div className="features__grid">
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="24" cy="24" r="20" stroke="#26a6ff" strokeWidth="2" fill="none"/>
-                  <path d="M24 12V24L32 28" stroke="#26a6ff" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+            {features.map((feature, idx) => (
+              <div className="feature-card" key={idx}>
+                <div className="feature-card__icon">{featureIconMap[feature.icon]}</div>
+                <h3 className="feature-card__title">{feature.title}</h3>
+                <p className="feature-card__text">{feature.text}</p>
               </div>
-              <h3 className="feature-card__title">Surveillance en temps réel</h3>
-              <p className="feature-card__text">
-                Suivi continu de la fréquence cardiaque, des mouvements et des signaux de stress pour une détection précoce des situations préoccupantes.
-              </p>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="24" cy="24" r="18" stroke="#2fe6c8" strokeWidth="2" fill="none"/>
-                  <circle cx="24" cy="24" r="4" fill="#2fe6c8"/>
-                  <path d="M24 6L24 2M24 46L24 42M6 24L2 24M46 24L42 24" stroke="#2fe6c8" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <h3 className="feature-card__title">Sécurité GPS</h3>
-              <p className="feature-card__text">
-                Géolocalisation discrète avec alertes de zones sécurisées. Permet aux parents de savoir où se trouve leur enfant en toute circonstance.
-              </p>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M24 8C16.27 8 10 14.27 10 22C10 29.73 24 40 24 40C24 40 38 29.73 38 22C38 14.27 31.73 8 24 8Z" stroke="#26a6ff" strokeWidth="2" fill="none"/>
-                  <circle cx="24" cy="22" r="6" stroke="#26a6ff" strokeWidth="2" fill="none"/>
-                </svg>
-              </div>
-              <h3 className="feature-card__title">Assistance au calme</h3>
-              <p className="feature-card__text">
-                Guidance douce par son et voix pour aider à la désescalade lors de moments difficiles, favorisant le retour au calme.
-              </p>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-card__icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="8" y="12" width="32" height="24" rx="2" stroke="#2fe6c8" strokeWidth="2" fill="none"/>
-                  <path d="M16 20L22 26L32 16" stroke="#2fe6c8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <h3 className="feature-card__title">Coordination familiale</h3>
-              <p className="feature-card__text">
-                Partage sécurisé des données entre parents, éducateurs et médecins pour une prise en charge coordonnée et efficace.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* How it Works Section */}
       <section className="how-it-works slide-in-left" id="howItWorks">
         <div className="container">
-          <h2 className="section__title">Comment ça fonctionne</h2>
-          <p className="section__subtitle">Un écosystème connecté pour une sécurité optimale</p>
-          
+          <h2 className="section__title">{t.howItWorks.title}</h2>
+          <p className="section__subtitle">{t.howItWorks.subtitle}</p>
+
           <div className="how-it-works__flow">
-            <div className="flow-step">
-              <div className="flow-step__icon">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="8" y="12" width="24" height="16" rx="2" stroke="#26a6ff" strokeWidth="2" fill="none"/>
-                  <circle cx="20" cy="20" r="4" fill="#26a6ff"/>
-                </svg>
-              </div>
-              <h3 className="flow-step__title">Bracelet</h3>
-              <p className="flow-step__text">Collecte des données en temps réel</p>
-            </div>
-            
-            <div className="flow-step__arrow">→</div>
-            
-            <div className="flow-step">
-              <div className="flow-step__icon">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="6" y="4" width="28" height="32" rx="3" stroke="#2fe6c8" strokeWidth="2" fill="none"/>
-                  <rect x="12" y="8" width="16" height="10" rx="1" fill="#2fe6c8" fillOpacity="0.2"/>
-                </svg>
-              </div>
-              <h3 className="flow-step__title">Application mobile</h3>
-              <p className="flow-step__text">Interface intuitive pour les parents</p>
-            </div>
-            
-            <div className="flow-step__arrow">→</div>
-            
-            <div className="flow-step">
-              <div className="flow-step__icon">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 8L28 16H24V28H16V16H12L20 8Z" fill="#26a6ff"/>
-                  <ellipse cx="20" cy="32" rx="8" ry="4" fill="#26a6ff" fillOpacity="0.3"/>
-                </svg>
-              </div>
-              <h3 className="flow-step__title">Plateforme cloud</h3>
-              <p className="flow-step__text">Analyse et stockage sécurisé</p>
-            </div>
-            
-            <div className="flow-step__arrow">→</div>
-            
-            <div className="flow-step">
-              <div className="flow-step__icon">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="20" cy="20" r="12" stroke="#2fe6c8" strokeWidth="2" fill="none"/>
-                  <path d="M20 12V20L26 24" stroke="#2fe6c8" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <h3 className="flow-step__title">Parents / Éducateurs</h3>
-              <p className="flow-step__text">Alertes et rapports détaillés</p>
-            </div>
+            {howSteps.map((step, idx) => (
+              <React.Fragment key={step.title}>
+                <div className="flow-step">
+                  <div className="flow-step__icon">{howIcons[idx]}</div>
+                  <h3 className="flow-step__title">{step.title}</h3>
+                  <p className="flow-step__text">{step.text}</p>
+                </div>
+                {idx < howSteps.length - 1 && <div className="flow-step__arrow">→</div>}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Circular Economy Section */}
       <section className="circular fade-in" id="circular">
         <div className="container">
           <div className="circular__content">
             <div className="circular__text">
-              <h2 className="section__title">Design circulaire</h2>
-              <p className="section__subtitle">Durabilité et réparabilité au cœur du produit</p>
-              <p className="circular__description">
-                SmartCare est conçu avec une approche modulaire innovante : le cœur électronique est détachable, 
-                la batterie est remplaçable, et le bracelet est interchangeable. Cette architecture permet 
-                une réparation facile, une mise à niveau progressive et un recyclage optimisé en fin de vie.
-              </p>
-              
+              <h2 className="section__title">{t.circularSection.title}</h2>
+              <p className="section__subtitle">{t.circularSection.subtitle}</p>
+              <p className="circular__description">{t.circularSection.description}</p>
+
               <div className="circular__cards">
-                <div className="circular-card">
-                  <div className="circular-card__icon">
-                    <i className="fas fa-redo-alt"></i>
+                {circularCards.map((card, idx) => (
+                  <div className="circular-card" key={idx}>
+                    <div className="circular-card__icon">
+                      <i className={card.icon}></i>
+                    </div>
+                    <h3 className="circular-card__title">{card.title}</h3>
+                    <p className="circular-card__text">{card.text}</p>
                   </div>
-                  <h3 className="circular-card__title">Réutilisation</h3>
-                  <p className="circular-card__text">Composants modulaires réutilisables</p>
-                </div>
-                
-                <div className="circular-card">
-                  <div className="circular-card__icon">
-                    <i className="fas fa-tools"></i>
-                  </div>
-                  <h3 className="circular-card__title">Réparation</h3>
-                  <p className="circular-card__text">Maintenance simple et accessible</p>
-                </div>
-                
-                <div className="circular-card">
-                  <div className="circular-card__icon">
-                    <i className="fas fa-sync-alt"></i>
-                  </div>
-                  <h3 className="circular-card__title">Reconditionnement</h3>
-                  <p className="circular-card__text">Recyclage et valorisation optimisés</p>
-                </div>
+                ))}
               </div>
             </div>
-            
+
             <div className="circular__visual">
               <div className="circular__image-wrapper">
-                <Image 
-                  src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767464630/prototype_lljqyz.png" 
-                  alt="Vue éclatée du prototype SmartCare montrant les composants modulaires" 
+                <Image
+                  src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767464630/prototype_lljqyz.png"
+                  alt={t.circularSection.imageAlt}
                   className="circular__image"
                   width={500}
                   height={500}
@@ -515,444 +626,273 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section className="pricing fade-in" id="pricing">
         <div className="container">
-          <h2 className="section__title">Tarifs et offres</h2>
-          <p className="section__subtitle">Choisissez le plan qui correspond à vos besoins</p>
-          
-          {/* Pricing Toggle */}
+          <h2 className="section__title">{t.pricingSection.title}</h2>
+          <p className="section__subtitle">{t.pricingSection.subtitle}</p>
+
           <div className="pricing__toggle">
-            <span className="pricing__toggle-label">Facturation mensuelle</span>
+            <span className="pricing__toggle-label">{t.pricingSection.billingMonthly}</span>
             <label className="pricing__switch">
               <input type="checkbox" id="pricingToggle" />
               <span className="pricing__slider"></span>
             </label>
-            <span className="pricing__toggle-label">Facturation annuelle <span className="pricing__badge">-20%</span></span>
+            <span className="pricing__toggle-label">
+              {t.pricingSection.billingYearly} <span className="pricing__badge">{t.pricingSection.yearlyBadge}</span>
+            </span>
           </div>
-          
-          {/* Pricing Cards */}
+
           <div className="pricing__grid">
-            {/* Starter Plan */}
-            <div className="pricing-card">
-              <div className="pricing-card__header">
-                <h3 className="pricing-card__title">Starter</h3>
-                <p className="pricing-card__subtitle">Pour commencer</p>
+            {pricingPlans.map(plan => (
+              <div key={plan.key} className={`pricing-card ${plan.featured ? 'pricing-card--featured' : ''}`}>
+                {plan.featured && (
+                  <div className="pricing-card__badge">
+                    <i className={plan.badgeIcon}></i> {t.pricingSection.mostPopular}
+                  </div>
+                )}
+                <div className="pricing-card__header">
+                  <h3 className="pricing-card__title">{t.pricingSection.plans[plan.key].title}</h3>
+                  <p className="pricing-card__subtitle">{t.pricingSection.plans[plan.key].subtitle}</p>
+                </div>
+                <div className="pricing-card__price">
+                  <span className="pricing-card__amount" data-monthly={plan.priceMonthly} data-yearly={plan.priceYearly}>
+                    {plan.priceMonthly}
+                  </span>
+                  <span className="pricing-card__currency">{plan.currency}</span>
+                  <span className="pricing-card__period">{plan.period}</span>
+                </div>
+                <div className="pricing-card__device">
+                  <i className={plan.icon}></i>
+                  <span>{t.pricingSection.plans[plan.key].device}</span>
+                </div>
+                <ul className="pricing-card__features">
+                  {t.pricingSection.plans[plan.key].features.map((feature, index) => (
+                    <li key={index}>
+                      <i className="fas fa-check"></i> {feature}
+                    </li>
+                  ))}
+                </ul>
+                <button className={`btn ${plan.featured ? 'btn--primary' : 'btn--secondary'} btn--full pricing-card__cta`}>
+                  <i className={plan.ctaIcon}></i> {plan.key === 'enterprise' ? t.pricingSection.ctaContact : t.pricingSection.ctaChoose}
+                </button>
               </div>
-              <div className="pricing-card__price">
-                <span className="pricing-card__amount" data-monthly="950" data-yearly="760">950</span>
-                <span className="pricing-card__currency">DT</span>
-                <span className="pricing-card__period">/mois</span>
-              </div>
-              <div className="pricing-card__device">
-                <i className="fas fa-mobile-alt"></i>
-                <span>Bracelet inclus</span>
-              </div>
-              <ul className="pricing-card__features">
-                <li><i className="fas fa-check"></i> Surveillance en temps réel</li>
-                <li><i className="fas fa-check"></i> Géolocalisation GPS</li>
-                <li><i className="fas fa-check"></i> Alertes de sécurité</li>
-                <li><i className="fas fa-check"></i> Application mobile</li>
-                <li><i className="fas fa-check"></i> Support email</li>
-              </ul>
-              <button className="btn btn--secondary btn--full pricing-card__cta">
-                <i className="fas fa-shopping-cart"></i> Choisir ce plan
-              </button>
-            </div>
-            
-            {/* Professional Plan (Featured) */}
-            <div className="pricing-card pricing-card--featured">
-              <div className="pricing-card__badge">
-                <i className="fas fa-star"></i> Le plus populaire
-              </div>
-              <div className="pricing-card__header">
-                <h3 className="pricing-card__title">Professional</h3>
-                <p className="pricing-card__subtitle">Pour les familles</p>
-              </div>
-              <div className="pricing-card__price">
-                <span className="pricing-card__amount" data-monthly="1590" data-yearly="1270">1590</span>
-                <span className="pricing-card__currency">DT</span>
-                <span className="pricing-card__period">/mois</span>
-              </div>
-              <div className="pricing-card__device">
-                <i className="fas fa-mobile-alt"></i>
-                <span>Bracelet inclus</span>
-              </div>
-              <ul className="pricing-card__features">
-                <li><i className="fas fa-check"></i> Tout dans Starter</li>
-                <li><i className="fas fa-check"></i> Assistance au calme (IA)</li>
-                <li><i className="fas fa-check"></i> Partage avec éducateurs</li>
-                <li><i className="fas fa-check"></i> Rapports détaillés</li>
-                <li><i className="fas fa-check"></i> Support prioritaire</li>
-                <li><i className="fas fa-check"></i> Mises à jour gratuites</li>
-              </ul>
-              <button className="btn btn--primary btn--full pricing-card__cta">
-                <i className="fas fa-rocket"></i> Choisir ce plan
-              </button>
-            </div>
-            
-            {/* Enterprise Plan */}
-            <div className="pricing-card">
-              <div className="pricing-card__header">
-                <h3 className="pricing-card__title">Enterprise</h3>
-                <p className="pricing-card__subtitle">Pour les institutions</p>
-              </div>
-              <div className="pricing-card__price">
-                <span className="pricing-card__amount" data-monthly="3190" data-yearly="2550">3190</span>
-                <span className="pricing-card__currency">DT</span>
-                <span className="pricing-card__period">/mois</span>
-              </div>
-              <div className="pricing-card__device">
-                <i className="fas fa-mobile-alt"></i>
-                <span>Bracelets multiples</span>
-              </div>
-              <ul className="pricing-card__features">
-                <li><i className="fas fa-check"></i> Tout dans Professional</li>
-                <li><i className="fas fa-check"></i> Gestion multi-utilisateurs</li>
-                <li><i className="fas fa-check"></i> Intégration API</li>
-                <li><i className="fas fa-check"></i> Tableau de bord avancé</li>
-                <li><i className="fas fa-check"></i> Support dédié 24/7</li>
-                <li><i className="fas fa-check"></i> Formation personnalisée</li>
-                <li><i className="fas fa-check"></i> SLA garanti</li>
-              </ul>
-              <button className="btn btn--secondary btn--full pricing-card__cta">
-                <i className="fas fa-phone"></i> Nous contacter
-              </button>
-            </div>
+            ))}
           </div>
-          
-          {/* Additional Info */}
+
           <div className="pricing__info">
-            <div className="pricing__info-item">
-              <i className="fas fa-shield-alt"></i>
-              <div>
-                <h4>Garantie 2 ans</h4>
-                <p>Sur tous les bracelets SmartCare</p>
+            {pricingInfoItems.map((item, idx) => (
+              <div className="pricing__info-item" key={idx}>
+                <i className={item.icon}></i>
+                <div>
+                  <h4>{item.title}</h4>
+                  <p>{item.text}</p>
+                </div>
               </div>
-            </div>
-            <div className="pricing__info-item">
-              <i className="fas fa-sync-alt"></i>
-              <div>
-                <h4>Annulation gratuite</h4>
-                <p>À tout moment, sans engagement</p>
-              </div>
-            </div>
-            <div className="pricing__info-item">
-              <i className="fas fa-headset"></i>
-              <div>
-                <h4>Support inclus</h4>
-                <p>Assistance technique disponible</p>
-              </div>
-            </div>
+            ))}
           </div>
-          
-          {/* FAQ Pricing */}
+
           <div className="pricing__faq">
-            <h3 className="pricing__faq-title">Questions fréquentes sur les tarifs</h3>
+            <h3 className="pricing__faq-title">{t.pricingSection.faqTitle}</h3>
             <div className="pricing__faq-list">
-              <div className="pricing-faq-item">
-                <button className="pricing-faq-item__question">
-                  <span>Le bracelet est-il inclus dans le prix ?</span>
-                  <i className="fas fa-chevron-down"></i>
-                </button>
-                <div className="pricing-faq-item__answer">
-                  <p>Oui, le bracelet SmartCare est inclus dans tous nos plans. Vous recevrez un bracelet neuf lors de votre première commande.</p>
+              {pricingFaq.map((item, idx) => (
+                <div className="pricing-faq-item" key={idx}>
+                  <button className="pricing-faq-item__question">
+                    <span>{item.question}</span>
+                    <i className="fas fa-chevron-down"></i>
+                  </button>
+                  <div className="pricing-faq-item__answer">
+                    <p>{item.answer}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="pricing-faq-item">
-                <button className="pricing-faq-item__question">
-                  <span>Puis-je changer de plan plus tard ?</span>
-                  <i className="fas fa-chevron-down"></i>
-                </button>
-                <div className="pricing-faq-item__answer">
-                  <p>Absolument ! Vous pouvez mettre à niveau ou rétrograder votre plan à tout moment. Les changements prennent effet au prochain cycle de facturation.</p>
-                </div>
-              </div>
-              <div className="pricing-faq-item">
-                <button className="pricing-faq-item__question">
-                  <span>Y a-t-il des frais cachés ?</span>
-                  <i className="fas fa-chevron-down"></i>
-                </button>
-                <div className="pricing-faq-item__answer">
-                  <p>Non, nos prix sont transparents. Le prix affiché inclut le bracelet, l&apos;abonnement mensuel, et toutes les fonctionnalités listées. Les seuls frais supplémentaires seraient pour des accessoires optionnels.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Impact Section */}
       <section className="impact fade-in" id="impact">
         <div className="container">
           <div className="impact__content">
             <div className="impact__statement">
-              <h2 className="section__title">Impact social</h2>
-              <p className="impact__quote">
-                SmartCare transforme le quotidien des familles en offrant une tranquillité d&apos;esprit 
-                et en favorisant l&apos;autonomie des enfants avec Trisomie 21.
-              </p>
+              <h2 className="section__title">{t.impactSection.title}</h2>
+              <p className="impact__quote">{t.impactSection.quote}</p>
             </div>
-            
+
             <div className="impact__points">
-              <div className="impact-point">
-                <div className="impact-point__icon">
-                  <i className="fas fa-heart"></i>
+              {impactPoints.map((point, idx) => (
+                <div className="impact-point" key={idx}>
+                  <div className="impact-point__icon">
+                    <i className={point.icon}></i>
+                  </div>
+                  <h3 className="impact-point__title">{point.title}</h3>
+                  <p className="impact-point__text">{point.text}</p>
                 </div>
-                <h3 className="impact-point__title">Réduction de l&apos;anxiété familiale</h3>
-                <p className="impact-point__text">
-                  Les alertes en temps réel et la géolocalisation permettent aux parents de se sentir 
-                  rassurés tout en respectant l&apos;autonomie de leur enfant.
-                </p>
-              </div>
-              
-              <div className="impact-point">
-                <div className="impact-point__icon">
-                  <i className="fas fa-star"></i>
-                </div>
-                <h3 className="impact-point__title">Amélioration de l&apos;autonomie</h3>
-                <p className="impact-point__text">
-                  L&apos;assistance au calme et le suivi médical favorisent l&apos;indépendance progressive 
-                  et la confiance en soi de l&apos;enfant.
-                </p>
-              </div>
-              
-              <div className="impact-point">
-                <div className="impact-point__icon">
-                  <i className="fas fa-hands-helping"></i>
-                </div>
-                <h3 className="impact-point__title">Éducation inclusive</h3>
-                <p className="impact-point__text">
-                  Le partage sécurisé des données avec les équipes éducatives et médicales 
-                  facilite une prise en charge coordonnée et personnalisée.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="faq slide-in-left" id="faq">
         <div className="container">
-          <h2 className="section__title">Questions fréquentes</h2>
-          <p className="section__subtitle">Tout ce que vous devez savoir sur SmartCare</p>
-          
+          <h2 className="section__title">{t.faqSection.title}</h2>
+          <p className="section__subtitle">{t.faqSection.subtitle}</p>
+
           <div className="faq__list">
-            <div className="faq-item">
-              <button className="faq-item__question" aria-expanded="false">
-                <span>Est-ce un véritable dispositif médical ?</span>
-                <svg className="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className="faq-item__answer">
-                <p>
-                  SmartCare est conçu comme un dispositif médical de classe II, soumis aux réglementations 
-                  européennes (MDR). Il est destiné à la surveillance et à l&apos;assistance, mais ne remplace 
-                  pas les soins médicaux professionnels. Nous travaillons en étroite collaboration avec des 
-                  professionnels de santé pour garantir la sécurité et l&apos;efficacité du produit.
-                </p>
+            {faqItems.map((item, idx) => (
+              <div className="faq-item" key={idx}>
+                <button className="faq-item__question" aria-expanded="false">
+                  <span>{item.question}</span>
+                  <svg className="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <div className="faq-item__answer">
+                  <p>{item.answer}</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="faq-item">
-              <button className="faq-item__question" aria-expanded="false">
-                <span>Quelles données sont collectées ?</span>
-                <svg className="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className="faq-item__answer">
-                <p>
-                  Nous collectons uniquement les données nécessaires au fonctionnement du dispositif : 
-                  fréquence cardiaque, mouvements, signaux de stress, et géolocalisation (uniquement 
-                  lorsque activée). Toutes les données sont chiffrées, stockées de manière sécurisée, 
-                  et ne sont partagées qu&apos;avec les personnes autorisées (parents, éducateurs, médecins) 
-                  via un système de consentement explicite.
-                </p>
-              </div>
-            </div>
-            
-            <div className="faq-item">
-              <button className="faq-item__question" aria-expanded="false">
-                <span>Comment fonctionne le GPS ?</span>
-                <svg className="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className="faq-item__answer">
-                <p>
-                  Le GPS fonctionne de manière discrète et respectueuse de la vie privée. Les parents 
-                  peuvent définir des zones sécurisées (école, domicile, etc.). Si l&apos;enfant sort de 
-                  ces zones ou si une alerte est déclenchée, les parents reçoivent une notification. 
-                  La géolocalisation peut être désactivée à tout moment par les parents.
-                </p>
-              </div>
-            </div>
-            
-            <div className="faq-item">
-              <button className="faq-item__question" aria-expanded="false">
-                <span>Comment la confidentialité est-elle gérée ?</span>
-                <svg className="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className="faq-item__answer">
-                <p>
-                  La confidentialité est notre priorité absolue. Nous respectons le RGPD et appliquons 
-                  les principes de minimisation des données, de consentement explicite, et de sécurité 
-                  renforcée. Les données sont chiffrées en transit et au repos, et seuls les utilisateurs 
-                  autorisés peuvent y accéder. Nous ne vendons jamais de données à des tiers.
-                </p>
-              </div>
-            </div>
-            
-            <div className="faq-item">
-              <button className="faq-item__question" aria-expanded="false">
-                <span>Qu&apos;est-ce qui le rend circulaire ?</span>
-                <svg className="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className="faq-item__answer">
-                <p>
-                  Le design modulaire permet la réparation, la mise à niveau et le recyclage. Le cœur 
-                  électronique peut être remplacé sans jeter le bracelet, la batterie est remplaçable, 
-                  et les matériaux sont choisis pour leur recyclabilité. Nous proposons également un 
-                  programme de reprise et de reconditionnement pour prolonger la vie du produit.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
       <section className="contact fade-in" id="contact">
         <div className="container">
-          <h2 className="section__title">Contactez-nous</h2>
-          <p className="section__subtitle">Nous sommes là pour répondre à vos questions</p>
-          
+          <h2 className="section__title">{t.contactSection.title}</h2>
+          <p className="section__subtitle">{t.contactSection.subtitle}</p>
+
           <form className="contact__form" id="contactForm" noValidate>
             <div className="form-group">
               <label htmlFor="name" className="form-label">
-                <i className="fas fa-user"></i> Nom complet
+                <i className="fas fa-user"></i> {t.contactSection.nameLabel}
               </label>
               <input type="text" id="name" name="name" className="form-input" required aria-required="true" />
               <span className="form-error" id="nameError"></span>
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                <i className="fas fa-envelope"></i> Email
+                <i className="fas fa-envelope"></i> {t.contactSection.emailLabel}
               </label>
               <input type="email" id="email" name="email" className="form-input" required aria-required="true" />
               <span className="form-error" id="emailError"></span>
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="role" className="form-label">
-                <i className="fas fa-briefcase"></i> Rôle
+                <i className="fas fa-briefcase"></i> {t.contactSection.roleLabel}
               </label>
               <select id="role" name="role" className="form-input" required aria-required="true">
-                <option value="">Sélectionnez votre rôle</option>
-                <option value="parent">Parent</option>
-                <option value="educator">Éducateur</option>
-                <option value="doctor">Médecin</option>
-                <option value="investor">Investisseur</option>
+                {contactRoles.map(role => (
+                  <option key={role.value} value={role.value}>
+                    {role.label}
+                  </option>
+                ))}
               </select>
               <span className="form-error" id="roleError"></span>
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="message" className="form-label">
-                <i className="fas fa-comment-alt"></i> Message
+                <i className="fas fa-comment-alt"></i> {t.contactSection.messageLabel}
               </label>
               <textarea id="message" name="message" className="form-input form-textarea" rows="5" required aria-required="true"></textarea>
               <span className="form-error" id="messageError"></span>
             </div>
-            
-            <button type="submit" className="btn btn--primary btn--full" aria-label="Envoyer le formulaire">
-              <i className="fas fa-paper-plane"></i> Envoyer
+
+            <button type="submit" className="btn btn--primary btn--full" aria-label={t.contactSection.submit}>
+              <i className="fas fa-paper-plane"></i> {t.contactSection.submit}
             </button>
           </form>
-          
+
           <div className="contact__cta">
             <i className="fas fa-shield-alt"></i>
-            <p className="contact__cta-text">Construisez des routines quotidiennes plus sûres avec SmartCare.</p>
+            <p className="contact__cta-text">{t.contactSection.ctaText}</p>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="container">
           <div className="footer__content">
             <div className="footer__brand">
               <h3 className="footer__logo">
-                <i className="fas fa-heartbeat"></i> SmartCare
+              <img 
+                src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png" 
+                alt="SmartCare Logo" 
+                className="footer__logo-img"
+                width="32"
+                height="32"
+              />
+                <span>SmartCare</span>
               </h3>
-              <p className="footer__tagline">Dispositif médical intelligent pour enfants</p>
+              <p className="footer__tagline">{t.footerContent.tagline}</p>
             </div>
-            
+
             <div className="footer__links">
               <div className="footer__column">
-                <h4 className="footer__title">Produit</h4>
+                <h4 className="footer__title">{t.footerContent.productTitle}</h4>
                 <ul>
-                  <li><a href="#features">Fonctionnalités</a></li>
-                  <li><a href="#circular">Design circulaire</a></li>
-                  <li><a href="#pricing">Tarifs</a></li>
+                  <li><a href="#features">{t.footerContent.links.features}</a></li>
+                  <li><a href="#circular">{t.footerContent.links.circular}</a></li>
+                  <li><a href="#pricing">{t.footerContent.links.pricing}</a></li>
                 </ul>
               </div>
-              
+
               <div className="footer__column">
-                <h4 className="footer__title">Ressources</h4>
+                <h4 className="footer__title">{t.footerContent.resourcesTitle}</h4>
                 <ul>
-                  <li><a href="#impact">Impact</a></li>
-                  <li><a href="#faq">FAQ</a></li>
-                  <li><a href="#contact">Contact</a></li>
+                  <li><a href="#impact">{t.footerContent.links.impact}</a></li>
+                  <li><a href="#faq">{t.footerContent.links.faq}</a></li>
+                  <li><a href="#contact">{t.footerContent.links.contact}</a></li>
                 </ul>
               </div>
-              
+
               <div className="footer__column">
-                <h4 className="footer__title">Social</h4>
+                <h4 className="footer__title">{t.footerContent.socialTitle}</h4>
                 <ul className="footer__social">
-                  <li><a href="#" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i> LinkedIn</a></li>
-                  <li><a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i> Twitter</a></li>
-                  <li><a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i> Facebook</a></li>
+                  <li>
+                    <a href="#" aria-label="LinkedIn">
+                      <i className="fab fa-linkedin-in"></i> {t.footerContent.links.linkedin}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" aria-label="Twitter">
+                      <i className="fab fa-twitter"></i> {t.footerContent.links.twitter}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" aria-label="Facebook">
+                      <i className="fab fa-facebook-f"></i> {t.footerContent.links.facebook}
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
-          
+
           <div className="footer__bottom">
-            <p className="footer__disclaimer">
-              SmartCare est un dispositif médical en développement. Les informations présentées sont 
-              à titre informatif et peuvent être sujettes à modification.
-            </p>
-            <p className="footer__copyright">&copy; 2024 SmartCare. Tous droits réservés.</p>
+            <p className="footer__disclaimer">{t.footerContent.disclaimer}</p>
+            <p className="footer__copyright">{t.footerContent.rights}</p>
           </div>
         </div>
       </footer>
 
-      {/* Video Modal */}
       <div className="modal" id="videoModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
         <div className="modal__overlay" id="modalOverlay"></div>
         <div className="modal__content">
-          <button className="modal__close" id="modalClose" aria-label="Fermer la vidéo">
+          <button className="modal__close" id="modalClose" aria-label={t.videoModal.closeLabel}>
             <i className="fas fa-times"></i>
           </button>
           <div className="modal__video-wrapper">
             <video className="modal__video" id="modalVideo" controls>
               <source src="/assets/smartcare-video.mp4" type="video/mp4" />
-              Votre navigateur ne supporte pas la lecture vidéo.
+              {t.videoModal.fallback}
             </video>
           </div>
         </div>
       </div>
 
-      {/* Toast Notification */}
       <div className="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true">
         <div className="toast__content">
           <span className="toast__message" id="toastMessage"></span>

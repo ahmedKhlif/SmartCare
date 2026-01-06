@@ -1,6 +1,7 @@
 import './globals.css'
 import Script from 'next/script'
 import { Inter } from 'next/font/google'
+import { LanguageProvider } from './i18n/LanguageContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -8,6 +9,10 @@ export const metadata = {
   title: 'SmartCare Bracelet - Dispositif médical intelligent pour enfants',
   description: 'Un dispositif médical intelligent qui améliore l\'autonomie, la sécurité et le calme des enfants avec Trisomie 21.',
   keywords: 'SmartCare, bracelet médical, Trisomie 21, dispositif médical, sécurité enfants, IoT santé',
+  icons: {
+    icon: 'https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png',
+    apple: 'https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665924/logo_dark_ualmxv.png',
+  },
   openGraph: {
     title: 'SmartCare Bracelet - Dispositif médical intelligent pour enfants',
     description: 'Un dispositif médical intelligent qui améliore l\'autonomie, la sécurité et le calme des enfants avec Trisomie 21.',
@@ -17,7 +22,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr">
+    <html lang="en" dir="ltr">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -30,7 +35,10 @@ export default function RootLayout({ children }) {
             __html: `
               (function() {
                 const theme = localStorage.getItem('theme') || 'auto';
+                const language = localStorage.getItem('language') || 'en';
                 document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.lang = language;
+                document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
                 
                 // Apply auto theme immediately
                 if (theme === 'auto') {
@@ -43,7 +51,9 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <Script
           src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
           strategy="lazyOnload"

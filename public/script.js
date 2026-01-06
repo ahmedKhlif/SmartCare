@@ -650,35 +650,46 @@ function initCustomCursor() {
     if (window.innerWidth >= 1024 && cursor && cursorDot) {
         document.body.classList.add('has-custom-cursor');
         
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let cursorX = mouseX;
-        let cursorY = mouseY;
-        let dotX = mouseX;
-        let dotY = mouseY;
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+        let dotX = 0;
+        let dotY = 0;
+        let isInitialized = false;
 
-        // Initialize cursor position
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        cursorDot.style.left = dotX + 'px';
-        cursorDot.style.top = dotY + 'px';
-
+        // Track mouse movement
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
+            
+            // Initialize cursor position on first mouse move
+            if (!isInitialized) {
+                cursorX = mouseX;
+                cursorY = mouseY;
+                dotX = mouseX;
+                dotY = mouseY;
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                cursorDot.style.left = dotX + 'px';
+                cursorDot.style.top = dotY + 'px';
+                isInitialized = true;
+            }
         });
 
         // Smooth cursor animation
         const animateCursor = () => {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
+            if (isInitialized) {
+                cursorX += (mouseX - cursorX) * 0.1;
+                cursorY += (mouseY - cursorY) * 0.1;
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
 
-            dotX += (mouseX - dotX) * 0.3;
-            dotY += (mouseY - dotY) * 0.3;
-            cursorDot.style.left = dotX + 'px';
-            cursorDot.style.top = dotY + 'px';
+                dotX += (mouseX - dotX) * 0.3;
+                dotY += (mouseY - dotY) * 0.3;
+                cursorDot.style.left = dotX + 'px';
+                cursorDot.style.top = dotY + 'px';
+            }
 
             requestAnimationFrame(animateCursor);
         };

@@ -66,3 +66,4 @@ projet_eco/
 - Tous les chemins d'assets commencent par `/assets/` (pas `assets/`)
 
 
+
