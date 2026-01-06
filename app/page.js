@@ -160,7 +160,6 @@ export default function Home() {
         setTimeout(() => toast.remove(), 300)
       }, 3000)
     }
-    }
 
     // Initialize custom cursor directly
     const cursor = document.getElementById('cursor')
