@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 // Email template generator
 function generateEmailTemplate(data) {
@@ -292,29 +292,23 @@ export async function POST(request) {
       )
     }
 
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
-      },
-    })
+    // Initialize Resend
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
     // Generate email HTML
     const emailHTML = generateEmailTemplate({ name, email, role, message })
 
     // Send email to user
-    await transporter.sendMail({
-      from: `"SmartCare Team" <${process.env.SMTP_USER}>`,
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'SmartCare <onboarding@resend.dev>',
       to: email,
       subject: 'Thank You for Contacting SmartCare - We\'ll Be In Touch',
       html: emailHTML,
     })
 
     // Send notification to admin
-    await transporter.sendMail({
-      from: `"SmartCare Contact Form" <${process.env.SMTP_USER}>`,
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'SmartCare <onboarding@resend.dev>',
       to: 'khlifahmed9@gmail.com',
       subject: `New Contact Form Submission from ${name}`,
       html: `
