@@ -137,35 +137,7 @@ function generateEmailTemplate(data) {
                 transform: translateY(-2px);
             }
             .social-section {
-                text-align: center;
-                padding: 20px 0;
-                margin-top: 30px;
-                border-top: 2px solid #f0f0f0;
-            }
-            .social-section p {
-                color: #888;
-                font-size: 14px;
-                margin-bottom: 15px;
-            }
-            .social-links {
-                display: flex;
-                justify-content: center;
-                gap: 15px;
-            }
-            .social-links a {
-                display: inline-block;
-                width: 40px;
-                height: 40px;
-                background: linear-gradient(135deg, #26a6ff, #2fe6c8);
-                border-radius: 50%;
-                text-decoration: none;
-                color: white;
-                font-size: 18px;
-                line-height: 40px;
-                transition: transform 0.3s ease;
-            }
-            .social-links a:hover {
-                transform: scale(1.1);
+                display: none;
             }
             .footer {
                 background: #f8f9fa;
@@ -206,7 +178,7 @@ function generateEmailTemplate(data) {
             <!-- Header -->
             <div class="header">
                 <div class="logo">
-                    <img src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665292/log_light_wk2s6e.png" alt="SmartCare Logo">
+                    <img src="https://res.cloudinary.com/dqsok4hr5/image/upload/v1767665292/log_light_wk2s6e.png" alt="SmartCare Logo" width="80" height="80" style="display: block; max-width: 100%; width: 80px; height: 80px;">
                 </div>
                 <h1>SmartCare</h1>
                 <p>We received your message</p>
@@ -253,15 +225,7 @@ function generateEmailTemplate(data) {
             </div>
 
             <!-- Social Section -->
-            <div class="social-section">
-                <p>Connect With Us</p>
-                <div class="social-links">
-                    <a href="https://facebook.com/smartcare" title="Facebook">f</a>
-                    <a href="https://twitter.com/smartcare" title="Twitter">𝕏</a>
-                    <a href="https://linkedin.com/company/smartcare" title="LinkedIn">in</a>
-                    <a href="https://instagram.com/smartcare" title="Instagram">📷</a>
-                </div>
-            </div>
+            <!-- Removed social links -->
 
             <!-- Footer -->
             <div class="footer">
