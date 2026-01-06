@@ -282,10 +282,13 @@ function generateEmailTemplate(data) {
 
 export async function POST(request) {
   try {
+    console.log('📧 Contact form submitted')
     const { name, email, role, message } = await request.json()
+    console.log('📝 Form data:', { name, email, role, message: message.substring(0, 50) + '...' })
 
     // Validate input
     if (!name || !email || !role || !message) {
+      console.error('❌ Validation failed: Missing fields')
       return new Response(
         JSON.stringify({ success: false, message: 'All fields are required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -293,23 +296,28 @@ export async function POST(request) {
     }
 
     // Initialize Resend
+    console.log('🔑 API Key loaded:', process.env.RESEND_API_KEY ? 'Yes' : 'No')
     const resend = new Resend(process.env.RESEND_API_KEY)
 
     // Generate email HTML
     const emailHTML = generateEmailTemplate({ name, email, role, message })
+    console.log('✅ Email template generated')
 
     // Send email to user
-    await resend.emails.send({
+    console.log('📮 Sending confirmation email to:', email)
+    const userEmailResult = await resend.emails.send({
       from: process.env.EMAIL_FROM || 'SmartCare <onboarding@resend.dev>',
       to: email,
       subject: 'Thank You for Contacting SmartCare - We\'ll Be In Touch',
       html: emailHTML,
     })
+    console.log('✉️ User email result:', userEmailResult)
 
     // Send notification to admin
-    await resend.emails.send({
+    console.log('📮 Sending admin notification to:', process.env.ADMIN_EMAIL || 'khlifahmed9@gmail.com')
+    const adminEmailResult = await resend.emails.send({
       from: process.env.EMAIL_FROM || 'SmartCare <onboarding@resend.dev>',
-      to: 'khlifahmed9@gmail.com',
+      to: process.env.ADMIN_EMAIL || 'khlifahmed9@gmail.com',
       subject: `New Contact Form Submission from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
@@ -320,7 +328,9 @@ export async function POST(request) {
         <p>${message.replace(/\n/g, '<br>')}</p>
       `,
     })
+    console.log('✉️ Admin email result:', adminEmailResult)
 
+    console.log('✅ Both emails sent successfully')
     return new Response(
       JSON.stringify({ 
         success: true, 
@@ -329,7 +339,9 @@ export async function POST(request) {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
   } catch (error) {
-    console.error('Email error:', error)
+    console.error('💥 Email error:', error)
+    console.error('Error message:', error.message)
+    console.error('Error details:', JSON.stringify(error, null, 2))
     return new Response(
       JSON.stringify({ 
         success: false, 
