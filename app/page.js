@@ -94,6 +94,56 @@ export default function Home() {
       })
     }
 
+    // Contact form handler
+    const contactForm = document.getElementById('contactForm')
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        
+        const name = document.getElementById('name').value
+        const email = document.getElementById('email').value
+        const role = document.getElementById('role').value
+        const message = document.getElementById('message').value
+
+        const submitBtn = contactForm.querySelector('button[type="submit"]')
+        const originalText = submitBtn.innerHTML
+        submitBtn.disabled = true
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'
+
+        try {
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, email, role, message }),
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            // Show success message
+            alert(data.message)
+            contactForm.reset()
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Sent Successfully!'
+            setTimeout(() => {
+              submitBtn.disabled = false
+              submitBtn.innerHTML = originalText
+            }, 3000)
+          } else {
+            alert('Error: ' + data.message)
+            submitBtn.disabled = false
+            submitBtn.innerHTML = originalText
+          }
+        } catch (error) {
+          console.error('Form submission error:', error)
+          alert('An error occurred while sending your message. Please try again.')
+          submitBtn.disabled = false
+          submitBtn.innerHTML = originalText
+        }
+      })
+    }
+
     // Initialize custom cursor directly
     const cursor = document.getElementById('cursor')
     const cursorDot = document.getElementById('cursorDot')
