@@ -243,7 +243,7 @@ const translations = {
         facebook: "Facebook"
       },
       disclaimer: "SmartCare is a medical device in development. The information provided is for reference and may change.",
-      rights: "© 2024 SmartCare. All rights reserved."
+      rights: "© 2026 SmartCare. All rights reserved."
     },
     footer: {
       company: "Company",
@@ -608,7 +608,7 @@ const translations = {
         facebook: "Facebook"
       },
       disclaimer: "SmartCare est un dispositif médical en développement. Les informations présentées sont à titre informatif et peuvent être sujettes à modification.",
-      rights: "© 2024 SmartCare. Tous droits réservés."
+      rights: "© 2026 SmartCare. Tous droits réservés."
     },
     footer: {
       company: "Entreprise",
@@ -973,7 +973,7 @@ const translations = {
         facebook: "Facebook"
       },
       disclaimer: "SmartCare جهاز طبي قيد التطوير. المعلومات المقدمة للاستدلال وقد تخضع للتغيير.",
-      rights: "© 2024 SmartCare. جميع الحقوق محفوظة."
+      rights: "© 2026 SmartCare. جميع الحقوق محفوظة."
     },
     footer: {
       company: "الشركة",
