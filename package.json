@@ -1,6 +1,6 @@
 {
   "name": "smartcare-landing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SmartCare Bracelet Landing Page - Next.js",
   "private": true,
   "scripts": {
